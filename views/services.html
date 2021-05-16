@@ -1,0 +1,197 @@
+<body class="loading">
+
+    <!-- Begin page -->
+    <div id="wrapper">
+
+        {{> topbar }}
+
+        {{> left-sidebar }}
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <div class="content-page">
+            <div class="content">
+
+                <!-- Start Content-->
+                <div class="container-fluid">
+                    
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Automobile Assistance</a></li>
+                                        <li class="breadcrumb-item active">{{ title }}</li>
+                                    </ol>
+                                </div>
+                                <div class="mt-3">
+                                    <h4 class="page-title text-uppercase">{{ title }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+
+                    <div class="row">
+                    
+                        <div class="col-xl-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-widgets">
+                                        <a href="javascript: void(0);" data-toggle="reload"><i class="mdi mdi-refresh"></i></a>
+                                        <a data-toggle="collapse" href="#cardCollpase5" role="button" aria-expanded="false" aria-controls="cardCollpase5"><i class="mdi mdi-minus"></i></a>
+                                        <a href="javascript: void(0);" data-toggle="remove"><i class="mdi mdi-close"></i></a>
+                                    </div>
+                                    <h4 class="header-title mb-0">Result</h4>
+
+                                    <div id="cardCollpase5" class="collapse pt-3 show">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-centered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product Name</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>ASOS Ridley High Waist</td>
+                                                        <td>$79.49</td>
+                                                        <td>82</td>
+                                                        <td>$6,518.18</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Marco Lightweight Shirt</td>
+                                                        <td>$128.50</td>
+                                                        <td>37</td>
+                                                        <td>$4,754.50</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Half Sleeve Shirt</td>
+                                                        <td>$39.99</td>
+                                                        <td>64</td>
+                                                        <td>$2,559.36</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Lightweight Jacket</td>
+                                                        <td>$20.00</td>
+                                                        <td>184</td>
+                                                        <td>$3,680.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Marco Shoes</td>
+                                                        <td>$28.49</td>
+                                                        <td>69</td>
+                                                        <td>$1,965.81</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ASOS Ridley High Waist</td>
+                                                        <td>$79.49</td>
+                                                        <td>82</td>
+                                                        <td>$6,518.18</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Half Sleeve Shirt</td>
+                                                        <td>$39.99</td>
+                                                        <td>64</td>
+                                                        <td>$2,559.36</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Lightweight Jacket</td>
+                                                        <td>$20.00</td>
+                                                        <td>184</td>
+                                                        <td>$3,680.00</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div> <!-- end table responsive-->
+                                    </div> <!-- collapsed end -->
+                                </div> <!-- end card-body -->
+                            </div> <!-- end card-->
+                        </div> <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                </div> <!-- container -->
+
+            </div> <!-- content -->
+
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            2015 - <script>document.write(new Date().getFullYear())</script> &copy; UBold theme by <a href="">Coderthemes</a> 
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-md-right footer-links d-none d-sm-block">
+                                <a href="javascript:void(0);">About Us</a>
+                                <a href="javascript:void(0);">Help</a>
+                                <a href="javascript:void(0);">Contact Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- end Footer -->
+
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+
+    </div>
+    <!-- END wrapper -->
+
+    {{> right-setting-bar }}
+
+    <!-- Axios js-->
+    <script src="/app/lib/axios.js"></script>
+    <!-- vue js -->
+    <script src="/app/lib/vue.js"></script>
+    <!-- XLXS -->
+    <script src="/app/lib/xlxs.js"></script>
+    <script src="/app/lib/file-saver.js"></script>
+    <script src="/app/lib/xlxs-full.js"></script>
+
+    <script>
+
+        var app = new Vue({
+            el: "#app",
+            delimiters: ["{%", "%}"],
+
+            data: {
+                
+            },
+            
+            mounted() {
+                this.ws.asinHeader.splice(0, 0, '');
+            },
+            // 
+            methods: {
+
+                logout() {
+                        axios.post('/logout')
+                            .then(result => {
+                                window.location.href = '/login';
+                            }).catch(err => {
+                                console.log('Error', err);
+                            });
+                }
+                
+            }
+        })
+
+
+    </script>
+
+    {{> theme-script }}
+    
+</body>

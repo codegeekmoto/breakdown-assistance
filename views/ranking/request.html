@@ -1,0 +1,401 @@
+<body class="loading">
+
+    <!-- Vue component -->
+    <div id="app">
+        <!-- Begin page -->
+        <div id="wrapper">
+
+            {{> topbar }}
+
+            {{> left-sidebar }}
+
+            <div class="content-page">
+                <div class="content">                    
+                    
+                    <!-- Start Content-->
+                    <div class="container-fluid" v-if="!processing">
+
+                        <textarea id="requestData" hidden>{{ data }}</textarea>
+                        
+                        <div class="row mt-3 mb-3">
+                            <div class="col-lg-8 mt-1">
+                                <h4 class="header-title text-uppercase">Start a new Request</h4>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="text-lg-right mt-3 mt-lg-0">
+                                    <button type="button" class="btn btn-sm btn-outline-primary waves-effect waves-light ml-1 ml-1" data-toggle="modal" data-target="#custom-modal"
+                                        >
+                                        <i class="fe-video"></i> <span class="font-weight-bold">Learn</span>
+                                    </button>
+                                </div>
+                            </div><!-- end col-->
+                        </div> <!-- end row -->
+                        
+                        <!-- Form -->
+                        <form class="was-validated">
+                            
+                        </form>
+
+                        <div class="row mb-0">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+                
+                                        <div class="row mb-3 bg-light p-1">
+                                            <div class="col-md-6">
+                                                <h5 class="text-uppercase">
+                                                    REQUEST DETAILS
+                                                </h5>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-lg-right">
+                                                    <select class="custom-select select-custom" v-model="request.market_place">
+                                                        <option selected="" value="">Choose the marketplace</option>
+                                                        <option value="amazon.com">amazon.com</option>
+                                                        <option value="amazon.ca">amazon.ca</option>
+                                                        <option value="amazon.de">amazon.de</option>
+                                                        <option value="amazon.co.uk">amazon.co.uk</option>
+                                                        <option value="amazon.es">amazon.es</option>
+                                                        <option selected value="amazon.fr">amazon.fr</option>
+                                                        <option value="amazon.it">amazon.it</option>
+                                                        <option value="amazon.au">amazon.au</option>
+                                                        <option value="amazon.mx">amazon.mx</option>
+                                                        <option value="amazon.tr">amazon.tr</option>
+                                                        <option value="amazon.jp">amazon.jp</option>
+                                                        <option value="amazon.in">amazon.in</option>
+                                                        <option value="amazon.nl">amazon.nl</option>
+                                                        <option value="amazon.br">amazon.br</option>
+                                                        <option value="amazon.se">amazon.se</option>
+                                                        <option value="amazon.sg">amazon.sg</option>
+                                                        <option value="amazon.ae">amazon.ae</option>
+                                                        <option value="amazon.pl">amazon.pl</option>
+                                                    </select>
+                                                </div>
+                                            </div><!-- end col-->
+                                        </div> <!-- end row -->
+                    
+                                        <div class="form-group mb-3">
+                                            <label for="product-name">Request Name <span class="text-danger">*</span></label>
+                                            <input type="text" required id="product-name" class="form-control" placeholder="e.g : BBQ Covers Canadian Market"
+                                                v-model="request.name">
+                                        </div>
+                    
+                                        
+                                        <div class="form-group mb-3">
+                                            <label for="product-summary">List your ASIN'S in here</label>
+                                            <textarea class="form-control" id="product-summary" rows="7" 
+                                                placeholder="Please enter one ASIN per line. We recommend to put in your most important competitors as well as your own ASIN if you have stablished product. You can put it up to 500 ASIN's. Please note that we only filter the first 40 search results by default."
+                                                v-model="request.asin_list">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row mb-3 bg-light p-1">
+                                            <div class="col-md-7">
+                                                <h5 class="text-uppercase">UPLOAD KEYWORD LIST</h5>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <a href="/Template Keyword Upload.xlsx" class="btn btn-degault bg-white">
+                                                    <i class="dripicons-download"></i>
+                                                    Download Template
+                                                </a>
+                                            </div><!-- end col-->
+                                        </div> <!-- end row -->
+                    
+                                        <form action="/" method="post" class="dropzone dz-clickable" id="listDropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                                            
+                    
+                                            <div class="dz-message needsclick">
+                                                <i class="h1 text-muted dripicons-cloud-upload"></i>
+                                                <h3>Drop list here or click to upload.</h3>
+                                                <span class="text-muted font-13">Drop your template list with keywords in here</span>
+                                            </div>
+                                        </form>
+                    
+                                        <!-- Preview -->
+                                        <div class="dropzone-previews mt-3" id="file-previews"></div>
+
+                                    </div>
+                                </div>
+                                <p class="text-success font-weight-bold ml-3"
+                                    :style="[showUploadMsg ? {'display': 'block'} : {'display': 'none'}]">
+                                    File loaded successfully! {% keywordCount %} keywords found.
+                                </p>
+                            </div>
+                        </div>
+                
+                        <div class="row mt-0">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="custom-control custom-checkbox checkbox-success">
+                                                    <input type="checkbox" class="custom-control-input" id="remove_duplicate"
+                                                        v-model="request.remove_duplicate"> 
+                                                    <label for="remove_duplicate" class="custom-control-label">&nbsp; 
+                                                        Remove potential duplicates
+                                                    </label>
+                                                </div>
+                                                <div class="custom-control custom-checkbox checkbox-success">
+                                                    <input type="checkbox" class="custom-control-input" id="count_product_ads"
+                                                        v-model="request.count_product_ads"> 
+                                                    <label for="count_product_ads" class="custom-control-label">&nbsp; 
+                                                        Also count Sponsored Products ads
+                                                    </label>
+                                                </div>
+                                                <div class="custom-control custom-checkbox checkbox-success">
+                                                    <input type="checkbox" class="custom-control-input" id="count_page2"
+                                                        v-model="request.count_page2"> 
+                                                    <label for="count_page2" class="custom-control-label">&nbsp; 
+                                                        Also count page 2 results (will double the tokens needed)
+                                                    </label>
+                                                </div>
+                                                <!-- <div class="custom-control custom-checkbox checkbox-success">
+                                                    <input type="checkbox" class="custom-control-input" id="include_mobile_ranking"
+                                                        v-model="request.include_mobile_ranking"> 
+                                                    <label for="include_mobile_ranking" class="custom-control-label">&nbsp; 
+                                                        Expand test to include mobile rankings (will double the tokens needed)
+                                                    </label>
+                                                </div> -->
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <button type="submit" class="btn w-100 text-card text-white waves-effect waves-light mt-4"
+                                                    @click="onCheckKeywords">
+                                                    <strong>Check keywords</strong><br>
+                                                    <small>Check up to 10,000 keywords all at once! Note that each keyword will cost 1 token</small>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                    </div> <!-- container -->
+
+                    {{> processing}}
+
+                    <!-- End dashboard -->
+                </div> <!-- content -->
+
+                {{> footer }}
+            </div>
+        </div>
+        <!-- END wrapper -->
+
+        {{> modals/alert}}
+
+        {{> right-setting-bar }}
+
+    </div>
+
+    <!-- alert -->
+    <script src="/app/lib/alert.js"></script>
+    <!-- Axios js-->
+    <script src="/app/lib/axios.js"></script>
+    <!-- vue js -->
+    <script src="/app/lib/vue.js"></script>
+
+    <!-- XLXS -->
+    <script src="/app/lib/xlxs.js"></script>
+    
+    <script>
+
+        var listDropzone = null;
+        var requestData = JSON.parse(document.querySelector('#requestData').innerHTML);
+
+        var app = new Vue({
+            el: "#app",
+            delimiters: ["{%", "%}"],
+
+            data: {
+                request: {
+                    id: null,
+                    user_id: '',
+                    name: '',
+                    market_place: '',
+                    keyword_list: [],
+                    asin_list: '',
+                    token_used: 0,
+                    remove_duplicate: true,
+                    count_product_ads: true,
+                    count_page2: true,
+                    // include_mobile_ranking: true
+                },
+
+                keywordCount: 0,
+                showUploadMsg: false,
+                processing: false
+            },
+
+            mounted() {
+                this.$nextTick(function() {
+        
+                    if (requestData !== null) {
+                        app.initData(requestData)
+                    }
+                })
+            },
+
+            computed: {
+                // getKeywordList: function() {
+                //     return this.request.keyword_list.split('\n');
+                // }
+            },
+
+            methods: {
+                initData: function(data) {
+
+                    this.request.id = data.id;
+                    this.request.name = data.name;
+                    this.request.market_place = data.market_place;
+                    this.request.keyword_list = data.keyword_list;
+                    this.keywordCount = data.keyword_list.length;
+                    this.showUploadMsg = true;
+
+
+                    this.request.remove_duplicate = data.remove_duplicate;
+                    this.request.count_product_ads = data.count_product_ads;
+                    this.request.count_page2 = data.count_page2;
+                    //this.request.include_mobile_ranking = data.include_mobile_ranking;
+
+                    data.asin_list.forEach(asin => {
+                        this.request.asin_list += asin+ '\n';
+                    });
+                },
+
+                // Keyword xlxs sheet parser
+                resolveKeywordsList: function(workbook) {
+                    var sheetName = workbook.SheetNames[0];
+                    var sheet = workbook.Sheets[sheetName];                    
+                    var keywordList = [];
+                    var i = 1;
+
+                    var obj = {};
+                    for (var key in sheet) {
+                        console.log('key', key);
+                        if (key.includes('A') && 'A'+i === key) {
+                            if (i > 1) {
+                                obj = {};
+                                obj['A'] = sheet[key].v;
+                                
+                                if (sheet.hasOwnProperty('B'+i)) {
+                                    obj['B'] = sheet['B'+i].v;
+                                } else {
+                                    obj['B'] = null;
+                                }
+
+                                keywordList.push(obj);
+                            }
+                            i++;
+                        }
+                    }
+
+                    app.request.keyword_list = keywordList;
+                    app.keywordCount = keywordList.length;
+                    app.showUploadMsg = true;
+
+                    console.log('keyword_list', keywordList);
+                },
+
+                // Dropzone addedfile callback, need in /js/pages/form-fileuploads.init.js
+                onAddedFile: function(file) {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        var xlxsData = event.target.result;
+                        app.resolveKeywordsList(XLSX.read(xlxsData, {type: 'binary'}));
+                    };
+
+                    reader.readAsBinaryString(file);
+                },
+
+                // Click handlers
+                onCheckKeywords: function() {
+                    if (this.validateFrom()) {
+                        this.processing = true;
+                        this.apiRequest(this.request.id)
+                    }
+                },
+
+                validateFrom: function() {
+                    if (this.request.market_place === '') {
+                        toastr.warning('Please select market place!')
+                        return false;
+                    }
+
+                    if (this.request.name.trim() == '') {
+                        toastr.warning('Request Name is required!')
+                        return false;
+                    }
+
+                    if (this.request.asin_list === '') {
+                        toastr.warning(`Please insert ASIN!`)
+                        return false;
+                    }
+
+                    if (this.request.keyword_list.length == 0) {
+                        toastr.warning(`Please upload keyword list!`)
+                        return false;
+                    }
+
+                    return true;
+                },
+
+                // Api calls
+                apiRequest: function(id) {
+                    var endpoint = id == null ? `/ranking/request` : `/ranking/request/update/${id}`;
+                    axios.post(endpoint, this.request)
+                        .then(result => {
+                            app.monitorProcess(result.data.data.id)
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
+                },
+
+                monitorProcess: function(id) {
+                    axios.get(`/ranking/monitor/${id}`)
+                        .then(result => {
+                            console.log('Results', result.data);
+                            if (result.data.data == 'Done') {
+                                window.location.replace(`/result/${id}`)
+                            } else if (result.data.data == 'Error' || result.data.data == 'Cannot find request.') {
+                                this.processing = false;
+                                bootbox.alert({
+                                    message: `Could not complete request. Something went wrong.`,
+                                    centerVertical: true,
+                                });
+                            } else {
+                                setTimeout(app.monitorProcess, 1000, id);
+                            }
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
+                },
+
+                logout() {
+                    axios.post('/logout')
+                        .then(result => {
+                            window.location.href = '/login';
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
+                }
+            }
+        })
+
+    </script>
+
+    {{> theme-script }}
+
+    <!-- Dropzone file uploads-->
+    <script src="/libs/dropzone/min/dropzone.min.js"></script>
+    <!-- Init js-->
+    <script src="/js/pages/form-fileuploads.init.js"></script>
+
+</body>

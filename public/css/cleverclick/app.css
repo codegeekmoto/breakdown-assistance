@@ -1,0 +1,45 @@
+.v-divider {
+    border-left: 2px solid lightgrey;
+    height: 100%;
+}
+
+.c-td {
+    text-align: center;
+}
+
+.btn-outline {
+    border: 1px solid gray !important;
+}
+
+.r-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    float: right;
+    height: 100%;
+}
+
+.text-card {
+    background-color: #1b2b42;
+    text-align: center;
+}
+
+.select-custom {
+    border: none;
+    background-color: lightgray;
+    height: 35px;
+    font-size: 14px;
+}
+
+.processing {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.processing p, h2 {
+    text-align: center;
+    align-items: center;
+}

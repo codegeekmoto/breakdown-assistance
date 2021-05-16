@@ -1,0 +1,331 @@
+<body class="loading">
+
+    <!-- Vue component -->
+    <div id="app">
+        <!-- Begin page -->
+        <div id="wrapper">
+
+            {{> topbar }}
+
+            {{> left-sidebar }}
+            <div class="content-page">
+                <div class="content">                    
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <h4 class="header-title mb-0 text-uppercase">Ranking Checker</h4>
+                                        <small class="font-weight-bold">Check Keywords for real time organic rankings!</small>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-right mt-3 mt-lg-0">
+                                            <button type="button" class="btn btn-sm btn-outline-primary waves-effect waves-light ml-1 ml-1" data-toggle="modal" data-target="#custom-modal">
+                                                <i class="fe-video"></i> <span class="font-weight-bold">Learn</span>
+                                            </button>
+                
+                                            <a href="/request" class="btn btn-sm btn-outline-secondary waves-effect waves-light ml-1">
+                                                <span class="font-weight-bold">Start a new Request</span>
+                                            </a>
+                                        </div>
+                                    </div><!-- end col-->
+                                </div> <!-- end row -->
+                            </div> <!-- end card-body-->
+                        </div>
+                        <!-- end page title --> 
+                
+                        <h4 class="page-title mb-3">Previous Requests</h4>
+
+                        <!-- Loading spin for request api call -->
+                        <div class="text-center mt-4 mb-4" v-if="isFetchingRequest">
+                            <img class="mt-3" height="50px" width="50px" src="/images/loader.gif" alt="">
+                        </div>
+                        
+                        <!-- Search and sort bar -->
+                        <div class="card mb-2" v-if="!isFetchingRequest && requests.length > 0 || isSearching">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <form class="form-inline">
+                                            <div class="form-group">
+                                                <label for="inputPassword2" class="sr-only">Search</label>
+                                                <input v-on:input="searchHandler" type="search" class="form-control" id="inputPassword2" placeholder="Search...">
+                                            </div>
+                                            <div class="form-group mx-sm-3">
+                                                <label for="status-select" class="mr-2">Sort By</label>
+                                                <select class="custom-select" id="status-select"
+                                                    @change="sortHandler">
+                                                    <option value="all" selected="">All</option>
+                                                    <option value="name">Name</option>
+                                                    <option value="market_place">Location</option>
+                                                    <option value="keyword_count">Amount of Keywords</option>
+                                                    <option value="token_used">Token used</option>
+                                                    <option value="created_at">Date Request </option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div> <!-- end row -->
+                            </div> <!-- end card-body-->
+                        </div>
+
+                        <!-- No result found -->
+                        <div class="card mb-2" v-if="requests.length < 1">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p class="font-weight-bold">No record found</p>
+                                    </div>
+                                </div> <!-- end row -->
+                            </div> <!-- end card-body-->
+                        </div>
+                        
+                        <!-- Requests list -->
+                        <div class="row mb-2" v-for="request in requests">
+                            <div class="col-12">
+                                <div class="card-box mb-2">
+                                    <div class="row align-items-center">
+                                        <div class="col-sm-4">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="mt-0 mb-2 font-16">
+                                                        {% request.name %}
+                                                        <a href="javascript:void(0);" class="action-icon ml-1" data-toggle="tooltip" title="Rename"
+                                                            @click="renameRequest(request)"> 
+                                                            <i class="mdi mdi-pencil"></i>
+                                                        </a>
+                                                    </h4>
+                                                    <p class="mb-1"><b>Location:</b> {% request.market_place %}</p>
+                                                    <p class="mb-0"><b>Amount of Keywords:</b> {% request.keyword_count %}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p class="mb-1"><b>Token used:</b> {% request.token_used %}</p>
+                                            <p class="mb-0"><b>Date Request started:</b> {% request.created_at %}</p>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="text-center mt-3 mt-sm-0">
+                                                <span class="badge font-14 p-1"
+                                                    v-bind:class="{
+                                                        'bg-soft-warning': request.status == 'In-progress', 
+                                                        'text-warning': request.status == 'In-progress',
+                                                        'bg-soft-success': request.status == 'Done', 
+                                                        'text-success': request.status == 'Done',
+                                                        'bg-soft-danger': request.status == 'Api Error', 
+                                                        'text-danger': request.status == 'Api Error',
+                                                    }">
+                                                    {% request.status %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="text-sm-right">
+                                                <a v-if="request.status == 'Done'" :href="'/result/'+ request.id" class="action-icon" data-toggle="tooltip" title="View"> <i class="mdi mdi-eye"></i></a>
+                                                <a :href="'/request/'+ request.id" class="action-icon"> <i class="mdi mdi-square-edit-outline" data-toggle="tooltip" title="Edit"></i></a>
+                                                <a href="javascript:void(0);" class="action-icon" data-toggle="tooltip" title="Delete"> <i class="mdi mdi-delete"
+                                                    @click="deleteRequest(request.id, request.name)"></i></a>
+                                            </div>
+                                        </div> <!-- end col-->
+                                    </div> <!-- end row -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                
+                    </div> <!-- container -->
+                    <!-- End dashboard -->
+                </div> <!-- content -->
+
+                {{> footer }}
+            </div>
+        </div>
+        <!-- END wrapper -->
+        
+        {{> right-setting-bar }}
+
+    </div>
+
+    <!-- Axios js-->
+    <script src="/app/lib/axios.js"></script>
+    <!-- vue js -->
+    <script src="/app/lib/vue.js"></script>
+    
+    <script>
+
+        var app = new Vue({
+            el: "#app",
+            delimiters: ["{%", "%}"],
+            data: {
+                requests: [],
+                tempRequest: [],
+                isFetchingRequest: true,
+                noRequestsFound: true,
+                isSearching: false
+            }, // End data
+
+            mounted() {
+                this.fetchAllRequests(1);
+            },
+
+            methods: {
+                onViewDetails: function() {
+                    
+                },
+
+                searchHandler: function(e) {
+                    this.isSearching = true;
+                    var temp = [];
+
+                    if (e.target.value.trim() === '') {
+                        this.requests = this.tempRequest;
+                    } else {
+                        this.tempRequest.forEach(value => {
+                            if (value.name.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
+                                || value.market_place.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
+                                || value.keyword_count.toString().toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
+                                || value.token_used.toString().toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
+                                || value.status.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1) {
+
+                                temp.push(value);
+                            }
+                        });
+
+                        this.requests = temp;
+                    }
+                }, 
+
+                sortHandler: function(event) {
+                    let sortBy = event.target.value;
+                    let len = this.requests.length;
+                    let data = this.requests;
+                    console.log('event', sortBy);
+                    console.log('event', data);
+
+                    if (sortBy !== 'all') {
+                        for (var i = len-1; i>0; i--){
+                            for(var j = 1; j<=i; j++){
+                                var temp = null;
+
+                                if(data[j-1][sortBy] > data[j][sortBy]){
+                                    console.log('data[j-1][sortBy]', data[j-1][sortBy]);
+                                    temp = data[j-1];
+                                    data[j-1] = data[j];
+                                    data[j] = temp;
+                                }
+                            }
+                        }
+                    } else {
+                        data = Object.assign({}, this.tempRequest);
+                    }
+
+                    // data[0]['name'] = 'data[0][name]';
+
+                    this.$set(this.requests, 'requests', data)
+
+                    // this.requests = data;
+                    console.log('data', data);
+                    console.log('data this.requests', this.requests);
+                },
+
+                // Api calls
+                fetchAllRequests: function(userId) {
+
+                    axios.get('/api/ranking')
+                        .then((result) => {
+                            app.requests = Object.assign([], result.data.data);
+                            app.tempRequest = Object.assign([], result.data.data);
+                            app.noRequestsFound = app.requests.length < 1;
+                            app.isFetchingRequest = false;
+
+                            console.log('app.requests.length', app.requests.length);
+                        }).catch((err) => {
+                            console.log('Error', err);
+                            app.isFetchingRequest = false;
+                        });
+                },
+
+                renameRequest: function(request) {
+                    bootbox.prompt({
+                        title: "Rename Request",
+                        inputType: 'text',
+                        required: true,
+                        value: request.name,
+                        centerVertical: true,
+                        buttons: {
+                            confirm: {
+                                label: 'Rename',
+                                className: 'btn-success'
+                            }
+                        },
+                        callback: function (newName) {
+                            if (newName !== null && newName.trim() !== '') {
+                                axios.put(`/api/ranking/rename/${request.id}`,{
+                                    name: newName
+                                })
+                                .then((result) => {
+                                    request.name = newName;
+                                    toastr.success('Request successfully renamed!')
+                                }).catch((err) => {
+                                    toastr.error('Failed to rename request! Try again.')
+                                });
+                            }
+                        }
+                    });
+                },
+
+                deleteRequest: function(requestId, name) {
+                    bootbox.confirm({
+                        title: 'Confirm',
+                        message: `Are you sure you want to delete ${name}?`,
+                        centerVertical: true,
+                        buttons: {
+                            confirm: {
+                                label: 'Delete',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (isDelete) {
+                            
+                            if (isDelete) {
+                                axios.delete('/api/ranking/delete/' + requestId)
+                                    .then((result) => {
+
+                                        console.log('app.requests.length', app.requests.length);
+
+                                        for (let i = 0; i < app.requests.length; i++) {
+                                            console.log('App', app.requests[i]);
+                                            if (app.requests[i].id == requestId) {
+                                                app.requests.splice(i, 1)
+                                            }
+                                        }
+
+                                        toastr.success('Request successfully deleted!')
+                                    }).catch((err) => {
+                                        toastr.error('Failed to rename request! Try again.')
+                                    });
+                            }
+
+                        }
+                    });
+                },
+
+                logout() {
+                    axios.post('/logout')
+                        .then(result => {
+                            window.location.href = '/login';
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
+                }
+
+            } // End methods
+        })
+        
+    </script>
+    
+    {{> theme-script }}
+</body>

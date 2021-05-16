@@ -1,0 +1,264 @@
+<body class="loading authentication-bg authentication-bg-pattern">
+
+    <div id="app" class="account-pages mt-5 mb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card bg-pattern">
+
+                        <div class="card-body p-4">
+                            
+                            <div class="text-center w-75 m-auto">
+                                <div class="auth-logo">
+                                    <a href="index.html" class="logo logo-dark text-center">
+                                        <span class="logo-lg">
+                                            <img src="../assets/images/logo-dark.png" alt="" height="22">
+                                        </span>
+                                    </a>
+                
+                                    <a href="index.html" class="logo logo-light text-center">
+                                        <span class="logo-lg">
+                                            <img src="../assets/images/logo-light.png" alt="" height="22">
+                                        </span>
+                                    </a>
+                                </div>
+                                <p class="text-muted mb-4 mt-3">Don't have an account? Create your account, it takes less than a minute</p>
+                            </div>
+
+                            <form>
+
+                                <div class="form-group">
+                                    <label for="fname">First Name</label>
+                                    <input v-model="user.fname" @change="textChanged" name="fname" class="form-control" type="text" id="fname" placeholder="Enter your name" required>
+                                    <ul v-if="fnameError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>First name is required</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lname">Last Name</label>
+                                    <input v-model="user.lname" @change="textChanged" name="lname" class="form-control" type="text" id="lname" placeholder="Enter your name" required>
+                                    <ul v-if="lnameError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Last name is required</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lname">Phone Number</label>
+                                    <input v-model="user.phone" @change="textChanged" name="phone" class="form-control" type="text" id="phone" placeholder="Enter your phone number" required>
+                                    <ul v-if="phoneError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Phone number is required</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <input v-model="user.email" @change="textChanged" name="email" class="form-control" type="email" id="email" required placeholder="Enter your email">
+                                    <ul v-if="emailRequired || emailExists || emailNotValid" class="parsley-errors-list filled">
+                                        <li v-if="emailRequired" class="parsley-required"><small>Email is required</small>.</li>
+                                        <li v-if="emailExists" class="parsley-required"><small>Email already exists</small>.</li>
+                                        <li v-if="emailNotValid" class="parsley-required"><small>Email is not valid</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <div class="input-group input-group-merge">
+                                        <input v-model="user.password" @change="textChanged" name="password" type="password" id="password" class="form-control" placeholder="Enter your password">
+                                        <div class="input-group-append" data-password="false">
+                                            <div class="input-group-text">
+                                                <span class="password-eye"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul v-if="passwordError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Password is required</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm_password">Confirm Password</label>
+                                    <div class="input-group input-group-merge">
+                                        <input v-model="user.confirm_password" @change="textChanged" name="cpassword" type="password" id="confirm_password" class="form-control" placeholder="Confirm your password">
+                                        <div class="input-group-append" data-password="false">
+                                            <div class="input-group-text">
+                                                <span class="password-eye"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul v-if="cpasswordError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Please confirm your password</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input checked type="checkbox" class="custom-control-input" id="checkbox-signup">
+                                        <label class="custom-control-label" for="checkbox-signup">I accept <a href="javascript: void(0);" class="text-dark">Terms and Conditions</a></label>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-0 text-center">
+                                    <button @click="saveUser" class="btn btn-success btn-block" type="button">
+                                        Sign Up 
+                                    </button>
+                                </div>
+                            </form>
+                        </div> <!-- end card-body -->
+                    </div>
+                    <!-- end card -->
+
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <p class="text-white-50">Already have account?  <a href="/login" class="text-white ml-1"><b>Sign In</b></a></p>
+                        </div> <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                </div> <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </div>
+    <!-- end page -->
+
+    <footer class="footer footer-alt">
+        2015 - <script>document.write(new Date().getFullYear())</script> &copy; UBold theme by <a href="" class="text-white-50">Coderthemes</a> 
+    </footer>
+
+    <!-- alert -->
+    <script src="/app/lib/alert.js"></script>
+    <!-- Axios js-->
+    <script src="/app/lib/axios.js"></script>
+    <!-- vue js -->
+    <script src="/app/lib/vue.js"></script>
+
+
+    <script>
+
+        var app = new Vue({
+            el: "#app",
+            delimiters: ["{%", "%}"],
+
+            data: {
+                user: {
+                    fname: '',
+                    lname: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    confirm_password: '',
+                    role: 'owner'
+                },
+
+                fnameError: false,
+                lnameError: false,
+                emailRequired: false,
+                emailExists: false,
+                emailNotValid: false,
+                passwordError: false,
+                cpasswordError: false,
+                phoneError: false,
+            }, 
+            
+            methods: {
+
+                saveUser() {
+                    if (this.validateForm()) {
+                        axios.post('/auth/register', app.user)
+                        .then(result => {
+
+                            console.log('result', result.data);
+
+                            if (result.data.success) {
+                                bootbox.alert({
+                                    message: `Registration success. Use your account email and password to login.`,
+                                    centerVertical: true,
+                                    callback: function (isDelete) {
+                                        window.location.href = '/login';
+                                    }
+                                });
+                            } else {
+                                if (result.data.message === 'Email already exists.') {
+                                    app.emailExists = true;
+                                }
+                            }
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
+                    }
+                },
+        
+                validateForm() {
+                    var passed = true;
+
+                    if (this.user.fname.trim() === '') {
+                        this.fnameError = true
+                        passed = false;
+                    }
+
+                    if (this.user.lname.trim() === '') {
+                        this.lnameError = true
+                        passed = false;
+                    }
+
+                    if (this.user.email.trim() === '') {
+                        this.emailRequired = true
+                        passed = false;
+                    } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.user.email))) {
+                        this.emailNotValid = true
+                        passed = false;
+                    }
+
+                    if (this.user.password.trim() === '') {
+                        this.passwordError = true
+                        passed = false;
+                    }
+
+                    if (this.user.phone.trim() === '') {
+                        this.phoneError = true
+                        passed = false;
+                    }
+
+                    if (this.user.confirm_password.trim() === '' || (this.user.password !== this.user.confirm_password)) {
+                        this.cpasswordError = true
+                        passed = false;
+                    }
+
+                    return passed;
+                },
+
+                textChanged(e) {
+                    switch (e.target.name) {
+                        case 'fname':
+                            this.fnameError = false;
+                            break;
+                        case 'lname':
+                            this.lnameError = false;
+                            break;
+                        case 'phone':
+                            this.phoneError = false;
+                            break;
+                        case 'email':
+                            this.emailRequired = false;
+                            this.emailExists = false;
+                            this.emailNotValid = false;
+                            break;
+                        case 'password':
+                            this.passwordError = false;
+                            break;
+                        case 'cpassword':
+                            this.cpasswordError = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        })
+
+    </script>
+
+    <!-- Vendor js -->
+    <script src="/js/vendor.min.js"></script>
+
+    <!-- App js -->
+    <script src="/js/app.min.js"></script>
+
+    {{> theme-script }}
+    
+</body>
