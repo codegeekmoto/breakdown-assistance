@@ -1,12 +1,12 @@
 {
-  "name": "autotmobile",
+  "name": "automobile",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Junrey Algario",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
