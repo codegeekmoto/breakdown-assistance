@@ -11,6 +11,7 @@ var webRoutes = (router) => {
     router.get('/register', auth.register)
 
     router.get('/', middleware.auth, pages.services)
+    router.get('/mechanics', middleware.auth, pages.mechanics)
 }
 
 module.exports = webRoutes;
