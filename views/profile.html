@@ -1,0 +1,345 @@
+<body class="loading">
+
+    <div id="app">
+        <!-- Begin page -->
+        <div id="wrapper">
+
+            {{> topbar }}
+
+            {{> left-sidebar }}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                    
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Automobile Assistance</a></li>
+                                            <li class="breadcrumb-item active">{{ title }}</li>
+                                        </ol>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h4 class="page-title text-uppercase">{{ title }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="mb-3">Personal Information</h4>
+                                        
+                                        <form>
+
+                                            <div class="form-group">
+                                                <label for="fname">First Name</label>
+                                                <input disabled style="max-width: 350px;" v-model="user.fname" @change="textChanged" name="fname" class="form-control" type="text" id="fname" placeholder="Enter your name" required>
+                                                <ul v-if="fnameError" class="parsley-errors-list filled">
+                                                    <li class="parsley-required"><small>First name is required</small>.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="lname">Last Name</label>
+                                                <input disabled style="max-width: 350px;" v-model="user.lname" @change="textChanged" name="lname" class="form-control" type="text" id="lname" placeholder="Enter your name" required>
+                                                <ul v-if="lnameError" class="parsley-errors-list filled">
+                                                    <li class="parsley-required"><small>Last name is required</small>.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="lname">Phone Number</label>
+                                                <input style="max-width: 350px;" v-model="user.phone" @change="textChanged" name="phone" class="form-control" type="text" id="phone" placeholder="Enter your phone number" required>
+                                                <ul v-if="phoneError" class="parsley-errors-list filled">
+                                                    <li class="parsley-required"><small>Phone number is required</small>.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email address</label>
+                                                <input style="max-width: 350px;" v-model="user.email" @change="textChanged" name="email" class="form-control" type="email" id="email" required placeholder="Enter your email">
+                                                <ul v-if="emailRequired || emailExists || emailNotValid" class="parsley-errors-list filled">
+                                                    <li v-if="emailRequired" class="parsley-required"><small>Email is required</small>.</li>
+                                                    <li v-if="emailExists" class="parsley-required"><small>Email already exists</small>.</li>
+                                                    <li v-if="emailNotValid" class="parsley-required"><small>Email is not valid</small>.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="form-group mb-0 text-center">
+                                                <button style="width: 150px;" @click="saveUser" class="btn btn-success btn-block" type="button">
+                                                    <span v-if="!isUpdatingProfile">Save</span>
+                                                    <span v-if="isUpdatingProfile"><i class="fas fa-circle-o-notch fa-spin"></i></span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <h4 class="mb-3">Change Password</h4>
+                                        
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="password">Password</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input style="max-width: 350px;" v-model="user.password" @change="textChanged" name="password" type="password" id="password" class="form-control" placeholder="Enter your password">
+                                                    <div class="input-group-append" data-password="false">
+                                                        <div class="input-group-text">
+                                                            <span class="password-eye"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <ul v-if="passwordError" class="parsley-errors-list filled">
+                                                    <li class="parsley-required"><small>Password is required</small>.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirm_password">Confirm Password</label>
+                                                <div class="input-group input-group-merge">
+                                                    <input style="max-width: 350px;" v-model="user.confirm_password" @change="textChanged" name="cpassword" type="password" id="confirm_password" class="form-control" placeholder="Confirm your password">
+                                                    <div class="input-group-append" data-password="false">
+                                                        <div class="input-group-text">
+                                                            <span class="password-eye"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <ul v-if="cpasswordError" class="parsley-errors-list filled">
+                                                    <li class="parsley-required"><small>Please confirm your password</small>.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="form-group mb-0 text-center">
+                                                <button style="width: 150px;" @click="changePassword" class="btn btn-success btn-block" type="button">
+                                                    <span v-if="!isChangingPassword">Change</span>
+                                                    <span v-if="isChangingPassword"><i class="fas fa-circle-o-notch fa-spin"></i></span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                        <!-- Services data -->
+                        <textarea hidden id="userJson">
+                            {{ userJson }}
+                        </textarea>
+            
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+                {{> footer }}
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+        </div>
+        <!-- END wrapper -->
+    </div>
+
+    {{> right-setting-bar }}
+
+    <!-- Axios js-->
+    <script src="/app/lib/axios.js"></script>
+    <!-- vue js -->
+    <script src="/app/lib/vue.js"></script>
+    <!-- XLXS -->
+    <script src="/app/lib/xlxs.js"></script>
+    <script src="/app/lib/file-saver.js"></script>
+    <script src="/app/lib/xlxs-full.js"></script>
+
+    <script>
+
+        var profile = JSON.parse(document.querySelector('#userJson').innerHTML)
+
+        var app = new Vue({
+            el: "#app",
+            delimiters: ["{%", "%}"],
+
+            data: {
+                // services: services
+                user: {
+                    id: profile.id,
+                    fname: profile.fname,
+                    lname: profile.lname,
+                    email: profile.email,
+                    phone: profile.phone,
+                    password: '',
+                    confirm_password: '',
+                    role: 'owner'
+                },
+
+                isUpdatingProfile: false,
+                isChangingPassword: false,
+
+                fnameError: false,
+                lnameError: false,
+                emailRequired: false,
+                emailExists: false,
+                emailNotValid: false,
+                passwordError: false,
+                cpasswordError: false,
+                phoneError: false,
+            },
+
+            mounted() {
+                console.log('profile', profile);
+            },
+            
+            // 
+            methods: {
+                saveUser() {
+                    if (this.isUpdatingProfile) return
+                    if (this.validateForm()) {
+                        this.isUpdatingProfile = true;
+                        const data = {
+                            'id': this.user.id,
+                            'phone': this.user.phone,
+                            'email': this.user.email
+                        }
+
+                        axios.post('/api/user/update', data)
+                        .then(result => {
+                            if (result.data.status) {
+                                toastr.success('Profile successfully updated!')
+                            } else {
+                                toastr.error('Failed to update profile!')
+                            }
+
+                            console.log('UPDATE PROFILE', result.data);
+                            this.isUpdatingProfile = false;
+                        }).catch(err => {
+                            this.isUpdatingProfile = false;
+                            console.log('Error', err);
+                        });
+                    }
+                },
+
+                changePassword() {
+                    if (this.isChangingPassword) return
+                    if (this.validateChangePassword()) {
+                        this.isChangingPassword = true
+                        const data = {
+                            'id': this.user.id,
+                            'password': this.user.password
+                        }
+
+                        axios.post('/api/user/change-password', data)
+                        .then(result => {
+                            if (result.data.status) {
+                                toastr.success('Password successfully changed!')
+                            } else {
+                                toastr.error('Failed to change password!')
+                            }
+
+                            this.isChangingPassword = false;
+                        }).catch(err => {
+                            this.isChangingPassword = false;
+                            console.log('Error', err);
+                        });
+                    }
+                },
+        
+                validateForm() {
+                    var passed = true;
+
+                    if (this.user.email.trim() === '') {
+                        this.emailRequired = true
+                        passed = false;
+                    } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.user.email))) {
+                        this.emailNotValid = true
+                        passed = false;
+                    }
+
+                    if (this.user.phone.trim() === '') {
+                        this.phoneError = true
+                        passed = false;
+                    }
+
+                    return passed;
+                },
+
+                validateChangePassword() {
+                    var passed = true
+
+                    if (this.user.password.trim() === '') {
+                        this.passwordError = true
+                        passed = false;
+                    }
+
+                    if (this.user.confirm_password.trim() === '' || (this.user.password !== this.user.confirm_password)) {
+                        this.cpasswordError = true
+                        passed = false;
+                    }
+
+                    return passed;
+                },
+
+                textChanged(e) {
+                    switch (e.target.name) {
+                        case 'fname':
+                            this.fnameError = false;
+                            break;
+                        case 'lname':
+                            this.lnameError = false;
+                            break;
+                        case 'phone':
+                            this.phoneError = false;
+                            break;
+                        case 'email':
+                            this.emailRequired = false;
+                            this.emailExists = false;
+                            this.emailNotValid = false;
+                            break;
+                        case 'password':
+                            this.passwordError = false;
+                            break;
+                        case 'cpassword':
+                            this.cpasswordError = false;
+                            break;
+                        default:
+                            break;
+                    }
+                },
+
+                logout() {
+                        axios.post('/logout')
+                            .then(result => {
+                                window.location.href = '/login';
+                            }).catch(err => {
+                                console.log('Error', err);
+                            });
+                }
+                
+            }
+        })
+
+
+    </script>
+
+    {{> theme-script }}
+    
+</body>

@@ -102,6 +102,10 @@
     </div>
     <!-- end page -->
 
+    <footer class="footer footer-alt">
+        <script>document.write(new Date().getFullYear())</script> &copy; <b>Automobile Breakdown Assistance</b> 
+    </footer>
+
     <!-- alert -->
     <script src="/app/lib/alert.js"></script>
     <!-- Axios js-->
@@ -133,10 +137,11 @@
 
                         axios.post('/api/auth/login', {
                             email: app.email,
-                            password: app.password
+                            password: app.password,
+                            role: 'owner'
                         })
                         .then(result => {
-                            if (result.data.status === 'success') {
+                            if (result.data.status) {
                                 window.location.href = '/';
                             } else {
                                 app.loginErr = true;
@@ -148,6 +153,7 @@
                                 title: "Error 500",
                                 message: 'Internal server error, Please contact your admin or technical support for further assistance.',
                                 centerVertical: true,
+                                centerHorizontal: true
                             });
 
                             this.isLoggingIn = false;

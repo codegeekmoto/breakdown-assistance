@@ -1,14 +1,14 @@
-const User = require('../../models/user')
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
+const model = require('../../models/datasource');
 
 exports.login = async (req, resp) => {
 
-    let {email, password} = req.body;
+    let {email, role, password} = req.body;
 
     try {
 
-        let user = await new User().select('email', email)
+        let user = await model.user.login(email, role)
 
         if (user.rowCount > 0) {
             bcrypt.compare(password, user.rows[0].password, function(error, result) {
@@ -17,7 +17,7 @@ exports.login = async (req, resp) => {
                         req.session.user = user.rows[0]
     
                         resp.send({
-                            status: 'success',
+                            status: true,
                             user: user.rows[0]
                         }, 200);
 
@@ -29,13 +29,13 @@ exports.login = async (req, resp) => {
                     }
                 } else {
                     resp.status(500).send({
-                        status: 'error',
+                        status: false,
                         error: error.message
                     });
                 }
             });
         } else {
-            resp.status(401).send({
+            resp.status(200).send({
                 status: false,
                 error: 'Wrong email or password!'
             })
@@ -48,9 +48,10 @@ exports.login = async (req, resp) => {
     }
 }
 
-exports.register = (req, resp) => {
+exports.register = async (req, resp) => {
 
     const validationErr = validationResult(req).array();
+    const body = req.body;
 
     if (validationErr.length > 0) {
         return resp.status(200).send({
@@ -59,7 +60,14 @@ exports.register = (req, resp) => {
         })
     }
 
-    const body = req.body;
+    const userExist = await model.user.select('email', body.email)
+
+    if (userExist.rowCount > 0) {
+        return resp.status(200).send({
+            status: false,
+            message: 'Email already exists'
+        })
+    }
 
     bcrypt.hash(body.password, 10, async function(err, hash) {
 
@@ -69,7 +77,18 @@ exports.register = (req, resp) => {
             const insertData = [body.fname, body.lname, body.email, body.role, body.phone, 
                                 body.picture === undefined ? '' : body.picture, hash];
 
-            const newUser = await new User().insert(colSet, insertData)
+            const newUser = await model.user.insert(colSet, insertData)
+
+            if (body.role === 'owner') {
+                let services = await model.service.selectAll()
+
+                if (services.rowCount > 0) {
+                    for (const service of services.rows) {
+                        await model.companyService.insert('service_id, user_id, activated',
+                            [service.id, newUser.rows[0].id, false])
+                    }
+                }
+            }
 
             return resp.status(200).send({
                 success: true, 
@@ -77,6 +96,7 @@ exports.register = (req, resp) => {
             });
 
         } catch (error) {
+            console.log('[auth register]', error);
             resp.status(500).send({
                 status: false,
                 error: error.message

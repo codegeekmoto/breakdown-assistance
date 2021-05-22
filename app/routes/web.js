@@ -12,6 +12,7 @@ var webRoutes = (router) => {
 
     router.get('/', middleware.auth, pages.services)
     router.get('/mechanics', middleware.auth, pages.mechanics)
+    router.get('/profile', middleware.auth, pages.profile)
 }
 
 module.exports = webRoutes;

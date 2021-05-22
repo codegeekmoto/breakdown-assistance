@@ -38,7 +38,7 @@ class Model {
     async update(colName, colValue, whereCol, whereValue) {
         const sql =`UPDATE ${this.tableName} 
                     SET ${colName} = $1
-                    WHERE ${whereCol} = $2`;
+                    WHERE ${whereCol} = $2 RETURNING *`;
 
         return await this.execute(sql, [colValue, whereValue])
     }
@@ -55,7 +55,7 @@ class Model {
 
             return data;
         } catch (error) {
-            console.log(`[${this.tableName} table]`, error);
+            console.log(`[${this.tableName} model]`, error);
             throw error
         }
     }

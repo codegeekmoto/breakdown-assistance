@@ -1,10 +1,15 @@
 var secret = require('../config/config').secret
+const model = require('../models/datasource')
 
-exports.auth = (req, resp, next) => {
 
-    console.log('HEADERS', req.headers['content-type']);
+exports.auth = async (req, resp, next) => {
+
+    // For quick testing
+    // const user = await model.user.select('id', 1);
+    // req.session.user = user.rows[0]
 
     if (req.session.user) {
+        console.log('[user data]', req.session.user);
         next();
     } else {
         if (req.headers['content-type'] === 'application/json') {

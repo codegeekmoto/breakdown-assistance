@@ -1,7 +1,7 @@
 module.exports = {
     smtp: {
-        email: 'app.cleverclick@gmail.com',
-        password: 'dxbhmxzsrqeyycpe'
+        email: 'app.automobile.assistance@gmail.com',
+        password: 'qfmwygesdmaayaqz'
     },
 
     db: {

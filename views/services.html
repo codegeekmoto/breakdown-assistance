@@ -1,120 +1,125 @@
 <body class="loading">
 
-    <!-- Begin page -->
-    <div id="wrapper">
+    <div id="app">
+        <!-- Begin page -->
+        <div id="wrapper">
 
-        {{> topbar }}
+            {{> topbar }}
 
-        {{> left-sidebar }}
+            {{> left-sidebar }}
 
-        <!-- ============================================================== -->
-        <!-- Start Page Content here -->
-        <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
 
-        <div class="content-page">
-            <div class="content">
+            <div class="content-page">
+                <div class="content">
 
-                <!-- Start Content-->
-                <div class="container-fluid">
+                    <!-- Start Content-->
+                    <div class="container-fluid">
                     
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Automobile Assistance</a></li>
-                                        <li class="breadcrumb-item active">{{ title }}</li>
-                                    </ol>
-                                </div>
-                                <div class="mt-3">
-                                    <h4 class="page-title text-uppercase">{{ title }}</h4>
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Automobile Assistance</a></li>
+                                            <li class="breadcrumb-item active">{{ title }}</li>
+                                        </ol>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h4 class="page-title text-uppercase">{{ title }}</h4>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>     
-                    <!-- end page title --> 
+                        </div>     
+                        <!-- end page title --> 
 
-                    <div class="row">
-                    
-                        <div class="col-xl-6">
-                            <div class="card">
-                                <div class="card-body">
-                                
-                                    <!-- <h4 class="header-title mb-0">Result</h4> -->
+                        {{> processing }}
 
-                                    <div id="cardCollpase5" class="collapse pt-3 show">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-centered mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Services Name</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Tow Service</td>
-                                                        <td>
-                                                            <span class="badge bg-soft-success text-success">Active</span>
-                                                        </td>
-                                                        <td>
-                                                            <div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
-                                                                <div class="btn-group btn-group-sm" style="float: none;">
-                                                                    <button type="button" class="tabledit-edit-button btn btn-danger" style="float: none;">
-                                                                        Deactivate
-                                                                    </button>
+                        <div v-if="!processing" class="row">
+                        
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                    
+                                        <!-- <h4 class="header-title mb-0">Result</h4> -->
 
-                                                                    <button type="button" class="tabledit-edit-button btn btn-info" style="float: none;">
-                                                                        History
-                                                                    </button>
+                                        <div id="cardCollpase5" class="collapse pt-3 show">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-centered mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Services Name</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr v-for="service in services">
+                                                            <td>{% service.name %}</td>
+                                                            <td style="width: 200px;">
+                                                                <span  v-if="service.activated" class="badge bg-soft-success text-success">
+                                                                    Active
+                                                                </span>
+                                                                <span v-if="!service.activated" class="badge bg-soft-danger text-danger">
+                                                                    Deactivated
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
+                                                                    <div class="btn-group btn-group-sm" style="float: none;">
+                                                                        <button style="width: 90px;" @click="activateService(service, false)" v-if="service.activated && !service.isUpdating" type="button" class="tabledit-edit-button btn btn-danger" style="float: none;">
+                                                                            Deactivate
+                                                                        </button>
+                                                                        <button style="width: 90px;" @click="activateService(service, true)" v-if="!service.activated && !service.isUpdating" type="button" class="tabledit-edit-button btn btn-success" style="float: none;">
+                                                                            Activate
+                                                                        </button>
+
+                                                                        <button style="width: 90px;" v-if="service.isUpdating" type="button" class="tabledit-edit-button btn btn-secondary" style="float: none;">
+                                                                            <i class="fas fa-circle-o-notch fa-spin"></i>
+                                                                        </button>
+
+                                                                        <button @click="onHistoryClick(service)" type="button" class="tabledit-edit-button btn btn-info" style="float: none;">
+                                                                            History
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div> <!-- end table responsive-->
-                                    </div> <!-- collapsed end -->
-                                </div> <!-- end card-body -->
-                            </div> <!-- end card-->
-                        </div> <!-- end col -->
-                    </div>
-                    <!-- end row -->
-
-                </div> <!-- container -->
-
-            </div> <!-- content -->
-
-            <!-- Footer Start -->
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6">
-                            2015 - <script>document.write(new Date().getFullYear())</script> &copy; UBold theme by <a href="">Coderthemes</a> 
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div> <!-- end table responsive-->
+                                        </div> <!-- collapsed end -->
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
                         </div>
-                        <div class="col-md-6">
-                            <div class="text-md-right footer-links d-none d-sm-block">
-                                <a href="javascript:void(0);">About Us</a>
-                                <a href="javascript:void(0);">Help</a>
-                                <a href="javascript:void(0);">Contact Us</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-            <!-- end Footer -->
+                        <!-- end row -->
+
+                        <!-- Services data -->
+                        <textarea hidden id="servicesData">
+                            {{ services }}
+                        </textarea>
+            
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+                {{> footer }}
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
 
         </div>
-
-        <!-- ============================================================== -->
-        <!-- End Page content -->
-        <!-- ============================================================== -->
-
-
+        <!-- END wrapper -->
     </div>
-    <!-- END wrapper -->
 
     {{> right-setting-bar }}
 
@@ -129,19 +134,56 @@
 
     <script>
 
+        var services = JSON.parse(document.querySelector('#servicesData').innerHTML)
+        services.forEach(service => {
+            service.isUpdating = false
+        });
+
+
         var app = new Vue({
             el: "#app",
             delimiters: ["{%", "%}"],
 
             data: {
-                
+                processing: false,
+                services: services
+            },
+
+            mounted() {
+                console.log('services', this.services);
             },
             
-            mounted() {
-                this.ws.asinHeader.splice(0, 0, '');
-            },
             // 
             methods: {
+
+                activateService(service, activate) {
+                    service.isUpdating = true;
+
+                    axios.post('/service/update', {
+                            id: service.company_service_id,
+                            activate: activate
+                        })
+                        .then(result => {
+                            if (result.data.status) {
+                                service.activated = activate
+                                toastr.success(service.name + ' successfully updated!')
+                            } else {
+                                toastr.error('Failed to update '+service.name+'!')
+                            }
+
+                            service.isUpdating = false;
+                        }).catch(err => {
+                            console.log('Error', err);
+                            bootbox.alert({
+                                title: "Error 500",
+                                message: 'Internal server error, Please contact your admin or technical support for further assistance.',
+                                centerVertical: true,
+                                centerHorizontal: true
+                            });
+
+                            service.isUpdating = false;
+                        });
+                },
 
                 logout() {
                         axios.post('/logout')
