@@ -10,10 +10,10 @@ module.exports = {
         // password: "admin",
         // database: "automobile"
 
-        host: "ec2-54-87-112-29.compute-1.amazonaws.com",
-        user: "mzvjosatocpiis",
-        password: "92ead8d71a18754cc75580d1802fda42d16f0315b80ccecebef339ead597d81d",
-        database: "ddgafk3q6ktgs3"
+        host: "hansken.db.elephantsql.com",
+        user: "ecamnidw",
+        password: "1b9jS54ZC198VNkEg1VGl2lvVAP7nYtZ",
+        database: "ecamnidw"
     },
     
     secret: 'dxbhmxzsrqeyycpe'
