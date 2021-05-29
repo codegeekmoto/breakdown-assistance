@@ -1,6 +1,7 @@
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const model = require('../../models/datasource');
+const constants = require('../../config/constants')
 
 exports.login = async (req, resp) => {
 
@@ -24,26 +25,30 @@ exports.login = async (req, resp) => {
                     } else {
                         resp.status(200).send({
                             status: false,
-                            error: 'Wrong email or password!'
+                            error: 'Wrong email or password!',
+                            code: constants.ERROR.RESOURCE_EXISTS
                         })
                     }
                 } else {
                     resp.status(500).send({
                         status: false,
-                        error: error.message
+                        error: error.message,
+                        code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR
                     });
                 }
             });
         } else {
             resp.status(200).send({
                 status: false,
-                error: 'Wrong email or password!'
+                error: 'Wrong email or password!',
+                code: constants.ERROR.RESOURCE_EXISTS
             })
         }        
     } catch (error) {
         resp.status(500).send({
             status: false,
-            error: error.message
+            error: error.message,
+            code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR
         })
     }
 }
@@ -56,7 +61,8 @@ exports.register = async (req, resp) => {
     if (validationErr.length > 0) {
         return resp.status(200).send({
             status: false,
-            error: validationErr
+            error: validationErr,
+            code: constants.ERROR.VALIDATION
         })
     }
 
@@ -65,7 +71,8 @@ exports.register = async (req, resp) => {
     if (userExist.rowCount > 0) {
         return resp.status(200).send({
             status: false,
-            message: 'Email already exists'
+            message: 'Email already exists',
+            code: constants.ERROR.RESOURCE_EXISTS
         })
     }
 
@@ -91,7 +98,7 @@ exports.register = async (req, resp) => {
             }
 
             return resp.status(200).send({
-                success: true, 
+                status: true, 
                 user: newUser.rows[0]
             });
 
@@ -99,9 +106,18 @@ exports.register = async (req, resp) => {
             console.log('[auth register]', error);
             resp.status(500).send({
                 status: false,
-                error: error.message
+                error: error.message,
+                code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR
             })
         }
+    });
+}
+
+exports.logout = async (req, resp) => {
+    req.session.user = null
+    return resp.status(200).send({
+        status: true, 
+        message: 'Logout success'
     });
 }
 

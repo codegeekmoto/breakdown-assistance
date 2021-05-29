@@ -43,6 +43,11 @@ class User extends Model {
 
         
     }
+
+    async findById(id) {
+        const sql =`SELECT * FROM users WHERE id = $1`;
+        return await this.execute(sql, [id])
+    }
 }
 
 module.exports = User;

@@ -188,31 +188,30 @@
 
     <script>
 
-        // var app = new Vue({
-        //     el: "#app",
-        //     delimiters: ["{%", "%}"],
+        var app = new Vue({
+            el: "#app",
+            delimiters: ["{%", "%}"],
 
-        //     data: {
+            data: {
                 
-        //     },
+            },
             
-        //     mounted() {
-        //         this.ws.asinHeader.splice(0, 0, '');
-        //     },
-        //     // 
-        //     methods: {
+            mounted() {
+            },
+            // 
+            methods: {
 
-        //         logout() {
-        //                 axios.post('/logout')
-        //                     .then(result => {
-        //                         window.location.href = '/login';
-        //                     }).catch(err => {
-        //                         console.log('Error', err);
-        //                     });
-        //         }
+                logout() {
+                    axios.post('/api/auth/logout')
+                        .then(result => {
+                            window.location.href = '/login';
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
+                }
                 
-        //     }
-        // })
+            }
+        })
 
 
     </script>

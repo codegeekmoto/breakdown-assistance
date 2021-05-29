@@ -7,6 +7,12 @@ const cors = require('cors');
 const handlebars  = require('express-handlebars');
 const session = require('express-session');
 const config = require('./app/config/config')
+var multer = require('multer');
+var upload = multer();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
+app.use(upload.array()); 
 
 var hbs = handlebars.create({
   defaultLayout: 'main',

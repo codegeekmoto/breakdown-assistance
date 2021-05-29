@@ -326,12 +326,12 @@
                 },
 
                 logout() {
-                        axios.post('/logout')
-                            .then(result => {
-                                window.location.href = '/login';
-                            }).catch(err => {
-                                console.log('Error', err);
-                            });
+                    axios.post('/api/auth/logout')
+                        .then(result => {
+                            window.location.href = '/login';
+                        }).catch(err => {
+                            console.log('Error', err);
+                        });
                 }
                 
             }

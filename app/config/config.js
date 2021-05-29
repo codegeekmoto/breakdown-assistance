@@ -16,5 +16,5 @@ module.exports = {
         database: "ecamnidw"
     },
     
-    secret: 'dxbhmxzsrqeyycpe'
+    secret: 'dxbhmxzsrqeyycpe',
 }
