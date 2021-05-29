@@ -5,7 +5,7 @@ exports.get = async (req, resp) => {
     var services = await model.service.selectAll()//getActiveServices(req.params.id)
 
     return resp.status(200).send({
-        success: true,
+        status: true,
         service: services.rows
     });
 
