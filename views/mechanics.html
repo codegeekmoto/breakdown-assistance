@@ -59,25 +59,34 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
+                                                        <tr v-for="mechanic in mechanics">
                                                             <td>
                                                                 <img src="../images/users/user-1.jpg" alt="" title="contact-img" class="rounded-circle avatar-sm">
-                                                                <span class="ml-2">John Doe</span>
+                                                                <span class="ml-2">{% mechanic.fname %} {% mechanic.lname %}</span>
                                                             </td>
-                                                            <td>05/23/2021</td>
+                                                            <td>{% mechanic.created_at %}</td>
                                                             <td>
                                                                 <span class="badge bg-soft-success text-success">Active</span>
                                                             </td>
                                                             <td>
                                                                 <div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
-                                                                    <div class="btn-group btn-group-sm" style="float: none;">
-                                                                        <button type="button" class="tabledit-edit-button btn btn-danger" style="float: none;">
-                                                                            Deactivate
-                                                                        </button>
-
-                                                                        <button type="button" class="tabledit-edit-button btn btn-info" style="float: none;">
-                                                                            History
-                                                                        </button>
+                                                                    <div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
+                                                                        <div class="btn-group btn-group-sm" style="float: none;">
+                                                                            <button style="width: 90px;" @click="activateMechanic(mechanic, false)" v-if="mechanic.activated && !mechanic.isUpdating" type="button" class="tabledit-edit-button btn btn-danger" style="float: none;">
+                                                                                Deactivate
+                                                                            </button>
+                                                                            <button style="width: 90px;" @click="activateMechanic(mechanic, true)" v-if="!mechanic.activated && !mechanic.isUpdating" type="button" class="tabledit-edit-button btn btn-success" style="float: none;">
+                                                                                Activate
+                                                                            </button>
+    
+                                                                            <button style="width: 90px;" v-if="mechanic.isUpdating" type="button" class="tabledit-edit-button btn btn-secondary" style="float: none;">
+                                                                                <i class="fas fa-circle-o-notch fa-spin"></i>
+                                                                            </button>
+    
+                                                                            <button @click="onHistoryClick(mechanic)" type="button" class="tabledit-edit-button btn btn-info" style="float: none;">
+                                                                                History
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -91,6 +100,11 @@
                             </div> <!-- end col -->
                         </div>
                         <!-- end row -->
+
+                        <!-- mechanics data -->
+                        <textarea hidden id="mechanicData">
+                            {{ mechanics }}
+                        </textarea>
 
                     </div> <!-- container -->
 
@@ -118,7 +132,7 @@
                         </div>
                         <div class="modal-body">
                            
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="project-priority">Select Mechanic</label>
                                 <select class="form-control select2-hidden-accessible" data-toggle="select2" data-select2-id="1" tabindex="-1" aria-hidden="true">
                                     <option value="MD" data-select2-id="3">Select Mechanic</option>
@@ -127,44 +141,64 @@
                                     <option value="HI" data-select2-id="17">Elon Musk</option>
                                     <option value="LW" data-select2-id="18">Dennis Rechie</option>
                                 </select>
-                            </div>
+                            </div> -->
 
                             <div class="row">
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="example-email">First Name</label>
-                                    <input type="text" id="example-email" name="fname" class="form-control" placeholder="First Name">
+                                    <input v-model="user.fname" @change="textChanged" name="fname" class="form-control" type="text" id="fname" placeholder="Enter your name" required>
+                                    <ul v-if="fnameError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>First name is required</small>.</li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="example-email">Last Name</label>
-                                    <input type="text" id="example-email" name="lname" class="form-control" placeholder="Last Name">
+                                    <input v-model="user.lname" @change="textChanged" name="lname" class="form-control" type="text" id="lname" placeholder="Enter your name" required>
+                                    <ul v-if="lnameError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Last name is required</small>.</li>
+                                    </ul>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="example-email">Email</label>
-                                    <input type="email" id="example-email" name="email" class="form-control" placeholder="Email">
+                                    <input v-model="user.email" @change="textChanged" name="email" class="form-control" type="email" id="email" required placeholder="Enter your email">
+                                    <ul v-if="emailRequired || emailExists || emailNotValid" class="parsley-errors-list filled">
+                                        <li v-if="emailRequired" class="parsley-required"><small>Email is required</small>.</li>
+                                        <li v-if="emailExists" class="parsley-required"><small>Email already exists</small>.</li>
+                                        <li v-if="emailNotValid" class="parsley-required"><small>Email is not valid</small>.</li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="example-email">Phone Number</label>
-                                    <input type="text" id="example-email" name="phone" class="form-control" placeholder="Phone">
+                                    <input v-model="user.phone" @change="textChanged" name="phone" class="form-control" type="text" id="phone" placeholder="Enter your phone number" required>
+                                    <ul v-if="phoneError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Phone number is required</small>.</li>
+                                    </ul>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="example-email">Password</label>
-                                    <input type="password" id="example-email" name="password" class="form-control" placeholder="Password">
+                                    <input v-model="user.password" @change="textChanged" name="password" type="password" id="password" class="form-control" placeholder="Enter your password">
+                                    <ul v-if="passwordError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Password is required</small>.</li>
+                                    </ul>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="example-email">Confirm Password</label>
-                                    <input type="password" id="example-email" name="cpassword" class="form-control" placeholder="Confirm Password">
+                                    <input v-model="user.confirm_password" @change="textChanged" name="cpassword" type="password" id="confirm_password" class="form-control" placeholder="Confirm your password">
+                                    <ul v-if="cpasswordError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Please confirm your password</small>.</li>
+                                    </ul>
                                 </div>
                             </div>
 
                             <div>
                                 <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                <button class="btn btn-success">Add</button>
+                                <button @click="saveUser" class="btn btn-success">Add</button>
                             </div>
                         </div>
                     </div><!-- /.modal-content -->
@@ -188,18 +222,178 @@
 
     <script>
 
+        var mechanics = JSON.parse(document.querySelector('#mechanicData').innerHTML)
+        mechanics.forEach(mechanic => {
+            mechanic.isUpdating = false
+        });
+
         var app = new Vue({
             el: "#app",
             delimiters: ["{%", "%}"],
 
             data: {
-                
+                user: {
+                    fname: '',
+                    lname: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    confirm_password: '',
+                    role: 'mechanic'
+                },
+
+                fnameError: false,
+                lnameError: false,
+                emailRequired: false,
+                emailExists: false,
+                emailNotValid: false,
+                passwordError: false,
+                cpasswordError: false,
+                phoneError: false,
+
+                processing: false,
+                mechanics: mechanics
             },
             
             mounted() {
+                console.log('this.mechanics', this.mechanics);
             },
             // 
             methods: {
+                activateMechanic(mechanic, activate) {
+                    mechanic.isUpdating = true;
+
+                    // axios.post('/mechanic/update', {
+                    //         id: mechanic.company_mechanic_id,
+                    //         activate: activate
+                    //     })
+                    //     .then(result => {
+                    //         if (result.data.status) {
+                    //             mechanic.activated = activate
+                    //             toastr.success(mechanic.name + ' successfully updated!')
+                    //         } else {
+                    //             toastr.error('Failed to update '+mechanic.name+'!')
+                    //         }
+
+                    //         mechanic.isUpdating = false;
+                    //     }).catch(err => {
+                    //         console.log('Error', err);
+                    //         bootbox.alert({
+                    //             title: "Error 500",
+                    //             message: 'Internal server error, Please contact your admin or technical support for further assistance.',
+                    //             centerVertical: true,
+                    //             centerHorizontal: true
+                    //         });
+
+                    //         service.isUpdating = false;
+                    //     });
+                },
+
+                saveUser() {
+                    if (this.validateForm()) {
+                        axios.post('/auth/register', app.user)
+                        .then(result => {
+
+                            console.log('result', result.data);
+
+                            if (result.data.status) {
+                                var mechanic = result.data.user
+                                mechanic.isUpdating = false
+                                app.mechanics.push(mechanic)
+                                app.clearForm()
+                                bootbox.alert({
+                                    message: `New mechanic successfully added.`,
+                                    centerVertical: true
+                                });
+                            } else {
+                                if (result.data.message === 'Email already exists.') {
+                                    app.emailExists = true;
+                                }
+                            }
+                        }).catch(err => {
+                            console.log('Error', err);
+                            bootbox.alert({
+                                    message: `Failed to add mechanic. Something went wrong there.`,
+                                    centerVertical: true,
+                                });
+                        });
+                    }
+                },
+
+                validateForm() {
+                    var passed = true;
+
+                    if (this.user.fname.trim() === '') {
+                        this.fnameError = true
+                        passed = false;
+                    }
+
+                    if (this.user.lname.trim() === '') {
+                        this.lnameError = true
+                        passed = false;
+                    }
+
+                    if (this.user.email.trim() === '') {
+                        this.emailRequired = true
+                        passed = false;
+                    } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.user.email))) {
+                        this.emailNotValid = true
+                        passed = false;
+                    }
+
+                    if (this.user.password.trim() === '') {
+                        this.passwordError = true
+                        passed = false;
+                    }
+
+                    if (this.user.phone.trim() === '') {
+                        this.phoneError = true
+                        passed = false;
+                    }
+
+                    if (this.user.confirm_password.trim() === '' || (this.user.password !== this.user.confirm_password)) {
+                        this.cpasswordError = true
+                        passed = false;
+                    }
+
+                    return passed;
+                },
+
+                clearForm() {
+                    this.user.fname = ''
+                    this.user.lname = ''
+                    this.user.email = ''
+                    this.user.phone = ''
+                    this.user.password = ''
+                    this.user.confirm_password = ''
+                },
+
+                textChanged(e) {
+                    switch (e.target.name) {
+                        case 'fname':
+                            this.fnameError = false;
+                            break;
+                        case 'lname':
+                            this.lnameError = false;
+                            break;
+                        case 'phone':
+                            this.phoneError = false;
+                            break;
+                        case 'email':
+                            this.emailRequired = false;
+                            this.emailExists = false;
+                            this.emailNotValid = false;
+                            break;
+                        case 'password':
+                            this.passwordError = false;
+                            break;
+                        case 'cpassword':
+                            this.cpasswordError = false;
+                            break;
+                        default:
+                            break;
+                    }
+                },
 
                 logout() {
                     axios.post('/api/auth/logout')
