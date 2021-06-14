@@ -148,7 +148,9 @@
                             <input type="radio" id="service_3" name="age" value="3" style="cursor: pointer;">
                             <label for="age3">Battery Service</label><br>
                             <input type="radio" id="service_4" name="age" value="4" style="cursor: pointer;">
-                            <label for="age3">Lockout Service</label><br><br>
+                            <label for="age3">Lockout Service</label><br>
+                            <input type="radio" id="service_5" name="age" value="5" style="cursor: pointer;">
+                            <label for="age3">Tire Service</label><br><br>
 
                             <div class="row">
                                 <div class="col-md-6 form-group mb-3">
@@ -313,10 +315,12 @@
                     var fuel = document.querySelector('#service_2')
                     var batt = document.querySelector('#service_3')
                     var lock = document.querySelector('#service_4')
+                    var tire = document.querySelector('#service_5')
 
                     this.service.service_id = tow.checked ? tow.value 
                                                 : fuel.checked ? fuel.value 
-                                                    : batt.checked ? batt.value : lock.value;
+                                                    : batt.checked ? batt.value 
+                                                        : lock.checked ? lock.value : tire.value;
 
                     if (this.validateForm() && !this.isSavingService) {
 
