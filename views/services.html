@@ -166,7 +166,7 @@
                                     <label for="example-email">Map Location</label>
                                     <div class="row">
                                         <div class="col-sm-9">
-                                            <input disabled v-model="latLngStr" @change="textChanged" name="location" class="form-control" type="text" id="location" placeholder="Enter your name" required>
+                                            <input disabled v-model="latLngStr" @change="textChanged" name="location" class="form-control" type="text" id="location" placeholder="Select location" required>
                                         </div>
                                         <div class="col-sm-3">
                                             <button data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#map-modal" style="height: 100%;" class="btn btn-sm btn-secondary">...</button>
@@ -179,7 +179,7 @@
                             </div>
                             <div class="form-group mb-3">
                                 <label for="example-email">Location Address</label>
-                                <textarea v-model="service.address" @change="textChanged" name="address" class="form-control" type="text" id="address" placeholder="Point location" required></textarea>
+                                <textarea v-model="service.address" @change="textChanged" name="address" class="form-control" type="text" id="address" placeholder="Enter Address" required></textarea>
                                 <ul v-if="addressError" class="parsley-errors-list filled">
                                     <li class="parsley-required"><small>Location address is required</small></li>
                                 </ul>

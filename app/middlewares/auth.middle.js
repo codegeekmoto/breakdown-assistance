@@ -5,8 +5,8 @@ const model = require('../models/datasource')
 exports.auth = async (req, resp, next) => {
 
     // For quick testing
-    const user = await model.user.select('id', 4);
-    req.session.user = user.rows[0]
+    // const user = await model.user.select('id', 4);
+    // req.session.user = user.rows[0]
 
     if (req.session.user) {
         console.log('[user data]', req.session.user);
