@@ -36,22 +36,27 @@
                         </div>     
                         <!-- end page title --> 
 
-                        {{> processing }}
-
-                        <div v-if="!processing" class="row">
+                        <div class="row">
                         
-                            <div class="col-xl-6">
+                            <div class="col-xl-12">
                                 <div class="card">
                                     <div class="card-body">
                                     
                                         <!-- <h4 class="header-title mb-0">Result</h4> -->
+                                        <button type="button" class="tabledit-edit-button btn btn-success" style="float: none;" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#add-mechanic">
+                                            <i class="fas fa-plus"></i> Add
+                                        </button>
 
-                                        <div id="cardCollpase5" class="collapse pt-3 show">
+                                         <!-- <h4 class="header-title mb-0">Result</h4> -->
+
+                                         <div id="cardCollpase5" class="collapse pt-3 show">
                                             <div class="table-responsive">
                                                 <table class="table table-hover table-centered mb-0">
                                                     <thead>
                                                         <tr>
                                                             <th>Services Name</th>
+                                                            <th>Description</th>
+                                                            <th>Address</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -60,6 +65,8 @@
 
                                                         <tr v-for="service in services">
                                                             <td>{% service.name %}</td>
+                                                            <td>{% service.description %}</td>
+                                                            <td>{% service.address %}</td>
                                                             <td style="width: 200px;">
                                                                 <span  v-if="service.activated" class="badge bg-soft-success text-success">
                                                                     Active
@@ -100,9 +107,16 @@
                         </div>
                         <!-- end row -->
 
+                        {{> processing }}
+
                         <!-- Services data -->
                         <textarea hidden id="servicesData">
                             {{ services }}
+                        </textarea>
+
+                        <!-- Services data -->
+                        <textarea hidden id="serviceTypes">
+                            {{ serviceTypes }}
                         </textarea>
             
                     </div> <!-- container -->
@@ -116,6 +130,99 @@
             <!-- ============================================================== -->
             <!-- End Page content -->
             <!-- ============================================================== -->
+
+            <!-- Add services modal -->
+            <div class="modal fade" id="add-mechanic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myLargeModalLabel">Service Details</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                           
+                            <div class="form-group">
+                                <label for="project-priority">Select Service</label>
+                                <select id="select__service" v-model="service.service_id" class="form-control select2-hidden-accessible" data-toggle="select2" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                    {{#each serviceTypes}}
+                                        <option value="{{this.id}}">{{ this.name }}</option>
+                                    {{/each}}
+                                </select>
+                                <ul v-if="descriptionError" class="parsley-errors-list filled">
+                                    <li class="parsley-required"><small>Please select service</small></li>
+                                </ul>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="example-email">Description</label>
+                                    <input v-model="service.description" @change="textChanged" name="description" class="form-control" type="text" id="description" placeholder="Enter Description" required>
+                                    <ul v-if="descriptionError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Description is required</small></li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="example-email">Map Location</label>
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <input disabled v-model="latLngStr" @change="textChanged" name="location" class="form-control" type="text" id="location" placeholder="Enter your name" required>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#map-modal" style="height: 100%;" class="btn btn-sm btn-secondary">...</button>
+                                        </div>
+                                    </div>
+                                    <ul v-if="locationError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Location is required</small></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="example-email">Location Address</label>
+                                <textarea v-model="service.address" @change="textChanged" name="address" class="form-control" type="text" id="address" placeholder="Point location" required></textarea>
+                                <ul v-if="addressError" class="parsley-errors-list filled">
+                                    <li class="parsley-required"><small>Location address is required</small></li>
+                                </ul>
+                            </div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <button @click="saveService" class="btn btn-success" style="width: 70px;">
+                                    <span v-if="!isSavingService">Add</span>
+                                    <span v-if="isSavingService"><i class="fas fa-circle-o-notch fa-spin"></i></span>
+                                </button>
+                            </div>
+                            
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
+
+            <!-- Map Modal -->
+            <!-- Add services modal -->
+            <div class="modal fade" id="map-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myLargeModalLabel">Service Details</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                           
+                            <div id='map' style='height: 400px;'></div>
+
+                            <div class="mt-3">
+                                <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <button @click="saveLocationLatLng" data-dismiss="modal" class="btn btn-success" style="width: 70px;">
+                                    Set
+                                </button>
+                            </div>
+                            
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!-- End Map Modal -->
 
         </div>
         <!-- END wrapper -->
@@ -133,7 +240,6 @@
     <script src="/app/lib/xlxs-full.js"></script>
 
     <script>
-
         var services = JSON.parse(document.querySelector('#servicesData').innerHTML)
         services.forEach(service => {
             service.isUpdating = false
@@ -146,15 +252,106 @@
 
             data: {
                 processing: false,
-                services: services
+                services: services,
+
+                service: {
+                    service_id: '',
+                    description: '',
+                    location: {lat: 2.333, lng: 43.454},
+                    address: ''
+                },
+
+                isSavingService: false,
+                descriptionError: false,
+                locationError: false,
+                addressError: false,
+                serviceIdError: false,
+
+                selectedLocationLatLng: null,
+                latLngStr: ''
             },
 
             mounted() {
-                console.log('services', this.services);
+                console.log('services', this.serviceTypes);
+                this.renderMap()
             },
             
             // 
             methods: {
+
+                renderMap() {
+                    mapboxgl.accessToken = 'pk.eyJ1IjoianVuZnJlZWNzcyIsImEiOiJja3B0bzhla3kwNHl0MnhwOTN6ZGpxZHZ5In0.bk2iOlhxIwYNEKhcS6IasA';
+                    var map = new mapboxgl.Map({
+                        container: 'map',
+                        style: 'mapbox://styles/mapbox/streets-v11',
+                        center: [-74.50, 40],
+                        zoom: 9
+                    });
+
+                    map.on('style.load', function() {
+                        map.on('click', function(e) {
+                            app.selectedLocationLatLng = e.lngLat
+                            new mapboxgl.Popup()
+                                .setLngLat(app.selectedLocationLatLng)
+                                .setHTML('Selected Location')
+                                .addTo(map);
+                        });
+                    });
+                },
+
+                saveLocationLatLng() {
+                    this.latLngStr = `[${this.selectedLocationLatLng.lat}, ${this.selectedLocationLatLng.lng}]`;
+                    this.service.location = {
+                        lat: this.selectedLocationLatLng.lat,
+                        lng: this.selectedLocationLatLng.lng
+                    }
+                },
+
+                saveService() {
+                    var selected_id = document.querySelector('#select__service').value
+                    document.querySelector('#select__service').value = selected_id.trim() === '' ? 1 : selected_id;
+
+                    this.service.service_id = document.querySelector('#select__service').value
+
+                    console.log('this.service.service_id', this.service.service_id)
+
+                    if (this.validateForm() && !this.isSavingService) {
+
+                        console.log('this.service', this.service);
+                        this.isSavingService = true
+                        axios.post('/api/service/save', app.service)
+                        .then(result => {
+
+                            console.log('result', result.data);
+
+                            if (result.data.status === true) {
+                                var service = result.data.service
+                                service.isUpdating = false
+                                app.services.push(service)
+                                app.clearForm()
+                                bootbox.alert({
+                                    message: `New service successfully added.`,
+                                    centerVertical: true
+                                });
+                            } else {
+                                bootbox.alert({
+                                message: `Failed to add service. Something went wrong there.`,
+                                    centerVertical: true,
+                                });
+                            }
+
+                            this.isSavingService = false
+                        }).catch(err => {
+                            console.log('Error', err);
+                            bootbox.alert({
+                                message: `Failed to add service. Something went wrong there.`,
+                                centerVertical: true,
+                            });
+
+                            this.isSavingService = false
+                        });
+                    }
+                },
 
                 activateService(service, activate) {
                     service.isUpdating = true;
@@ -185,6 +382,65 @@
                         });
                 },
 
+                validateForm() {
+                    var passed = true;
+
+                    if (this.service.description.trim() === '') {
+                        this.descriptionError = true
+                        passed = false;
+                    }
+
+                    if (this.service.location == null) {
+                        this.locationError = true
+                        passed = false;
+
+                        console.log('locationError');
+                    }
+
+                    if (this.service.address.trim() === '') {
+                        this.addressError = true
+                        passed = false;
+                    }
+
+                    if (this.service.service_id.trim() === '') {
+                        this.serviceIdError = true
+                        passed = false;
+
+                        console.log('serviceIdError', this.service.service_id);
+                    }
+
+                    return passed;
+                },
+
+                clearForm() {
+                    this.service.description = ''
+                    this.service.location = ''
+                    this.service.address = ''
+                    this.service.service_id = '',
+                    this.selectedLocationLatLng = null,
+                    this.latLngStr = ''
+                },
+
+                textChanged(e) {
+                    this.serviceIdError = false
+                    switch (e.target.name) {
+                        case 'description':
+                            this.descriptionError = false;
+                            break;
+
+                        case 'location':
+                            this.locationError = false;
+                            break;
+
+                        case 'address':
+                            this.addressError = false;
+                            break;
+                        default:
+                            break;
+                    }
+                },
+
+
                 logout() {
                     axios.post('/api/auth/logout')
                         .then(result => {
@@ -201,5 +457,10 @@
     </script>
 
     {{> theme-script }}
+
+    <script>
+        // Ui js
+        $('[data-toggle="select2"]').select2();
+    </script>
     
 </body>

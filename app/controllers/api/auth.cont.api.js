@@ -86,17 +86,6 @@ exports.register = async (req, resp) => {
 
             const newUser = await model.user.insert(colSet, insertData)
 
-            if (body.role === 'owner') {
-                let services = await model.service.selectAll()
-
-                if (services.rowCount > 0) {
-                    for (const service of services.rows) {
-                        await model.companyService.insert('service_id, user_id, activated',
-                            [service.id, newUser.rows[0].id, false])
-                    }
-                }
-            }
-
             return resp.status(200).send({
                 status: true, 
                 user: newUser.rows[0]

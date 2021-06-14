@@ -2,14 +2,16 @@ const model = require('../../models/datasource')
 
 
 exports.services = async (req, resp) => {
-    var services = await model.companyService.withServices(req.session.user.id)
+    var companyServices = await model.companyService.withServices(req.session.user.id)
+    var services = await model.service.selectAll()
 
-    console.log('services.rows', JSON.stringify(services.rows));
+    console.log('services.rows', companyServices.rows);
 
     resp.render('services', {
         title: 'Services',
         user: req.session.user,
-        services: JSON.stringify(services.rows)
+        services: JSON.stringify(companyServices.rows),
+        serviceTypes: services.rows
     })
 }
 

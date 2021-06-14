@@ -20,6 +20,8 @@ var apiRoutes = router => {
     
     // Services
     router.get('/service/:id', service.get)
+    router.post('/service/save', service.save)
+    router.get('/company/services', service.companyService)
 
     // Mechanic
     router.get('/mechanic/all/:id', mechanic.all)

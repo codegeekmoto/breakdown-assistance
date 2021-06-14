@@ -21,6 +21,15 @@ var seed;
     user_id: {
       type: 'int',
     },
+    description: {
+      type: 'string'
+    },
+    address: {
+      type: 'string'
+    },
+    latlng: {
+      type: 'json'
+    },
     activated: {
       type: 'boolean'
     },
