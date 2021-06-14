@@ -1,5 +1,5 @@
 var model = require('../../models/datasource')
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 const constants = require('../../config/constants');
 
 exports.update = async (req, resp) => {

@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const model = require('../../models/datasource');
 const constants = require('../../config/constants')
 
