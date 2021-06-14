@@ -41,8 +41,9 @@ exports.save = async (req, resp) => {
 }
 
 exports.companyService = async (req, resp) => {
+    console.log('req.params.id', req.params.id);
     try {
-        var services = await model.companyService.withServicesAll()
+        var services = await model.companyService.withServicesByservicesId(req.params.id)
         return resp.status(200).send({
             status: true,
             service: services.rows
