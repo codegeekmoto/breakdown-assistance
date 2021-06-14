@@ -40,7 +40,7 @@ exports.save = async (req, resp) => {
 
 exports.companyService = async (req, resp) => {
     try {
-        var services = await model.companyService.withServices(4)//req.session.user.id)
+        var services = await model.companyService.withServicesAll()
         return resp.status(200).send({
             status: true,
             service: services.rows
