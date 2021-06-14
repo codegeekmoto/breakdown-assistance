@@ -140,18 +140,15 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         </div>
                         <div class="modal-body">
-                           
-                            <div class="form-group">
-                                <label for="project-priority">Select Service</label>
-                                <select id="select__service" v-model="service.service_id" class="form-control select2-hidden-accessible" data-toggle="select2" data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                    {{#each serviceTypes}}
-                                        <option value="{{this.id}}">{{ this.name }}</option>
-                                    {{/each}}
-                                </select>
-                                <ul v-if="descriptionError" class="parsley-errors-list filled">
-                                    <li class="parsley-required"><small>Please select service</small></li>
-                                </ul>
-                            </div>
+                            <label for="project-priority">Select Service</label> <br>
+                            <input type="radio" id="service_1" name="age" value="1" style="cursor: pointer;" checked>
+                            <label for="age1">Tow Service</label><br>
+                            <input type="radio" id="service_2" name="age" value="2" style="cursor: pointer;">
+                            <label for="age2">Fuel Service</label><br>
+                            <input type="radio" id="service_3" name="age" value="3" style="cursor: pointer;">
+                            <label for="age3">Battery Service</label><br>
+                            <input type="radio" id="service_4" name="age" value="4" style="cursor: pointer;">
+                            <label for="age3">Lockout Service</label><br><br>
 
                             <div class="row">
                                 <div class="col-md-6 form-group mb-3">
@@ -284,18 +281,22 @@
                     var map = new mapboxgl.Map({
                         container: 'map',
                         style: 'mapbox://styles/mapbox/streets-v11',
-                        center: [-74.50, 40],
-                        zoom: 9
+                        zoom: 16
                     });
 
                     map.on('style.load', function() {
                         map.on('click', function(e) {
                             app.selectedLocationLatLng = e.lngLat
+                            console.log('e.lngLat', e.lngLat);
                             new mapboxgl.Popup()
                                 .setLngLat(app.selectedLocationLatLng)
                                 .setHTML('Selected Location')
                                 .addTo(map);
                         });
+
+                        // map.flyTo({
+                        //     center: [11.209116502224049, 124.99030834765392]
+                        // });
                     });
                 },
 
@@ -308,12 +309,14 @@
                 },
 
                 saveService() {
-                    var selected_id = document.querySelector('#select__service').value
-                    document.querySelector('#select__service').value = selected_id.trim() === '' ? 1 : selected_id;
+                    var tow = document.querySelector('#service_1')
+                    var fuel = document.querySelector('#service_2')
+                    var batt = document.querySelector('#service_3')
+                    var lock = document.querySelector('#service_4')
 
-                    this.service.service_id = document.querySelector('#select__service').value
-
-                    console.log('this.service.service_id', this.service.service_id)
+                    this.service.service_id = tow.checked ? tow.value 
+                                                : fuel.checked ? fuel.value 
+                                                    : batt.checked ? batt.value : lock.value;
 
                     if (this.validateForm() && !this.isSavingService) {
 
