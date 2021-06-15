@@ -133,7 +133,7 @@
 
             <!-- Add services modal -->
             <div class="modal fade" id="add-mechanic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-dialog modal-md modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="myLargeModalLabel">Service Details</h4>
@@ -153,15 +153,23 @@
                             <label for="age3">Tire Service</label><br><br>
 
                             <div class="row">
-                                <div class="col-md-6 form-group mb-3">
+                                <div class="col-md-12 form-group mb-3">
                                     <label for="example-email">Description</label>
                                     <input v-model="service.description" @change="textChanged" name="description" class="form-control" type="text" id="description" placeholder="Enter Description" required>
                                     <ul v-if="descriptionError" class="parsley-errors-list filled">
                                         <li class="parsley-required"><small>Description is required</small></li>
                                     </ul>
                                 </div>
+
+                                <div class="col-md-12 form-group mb-3">
+                                    <label for="example-email">Mobile Number</label>
+                                    <input v-model="service.mobile" @change="textChanged" name="mobile" class="form-control" type="text" id="description" placeholder="Enter Mobile Number" required>
+                                    <ul v-if="mobileError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Mobile number is required</small></li>
+                                    </ul>
+                                </div>
                             
-                                <div class="col-md-6 form-group mb-3">
+                                <div class="col-md-12 form-group mb-3">
                                     <label for="example-email">Map Location</label>
                                     <div class="row">
                                         <div class="col-sm-9">
@@ -257,7 +265,8 @@
                     service_id: '',
                     description: '',
                     location: {lat: 2.333, lng: 43.454},
-                    address: ''
+                    address: '',
+                    mobile: ''
                 },
 
                 isSavingService: false,
@@ -265,6 +274,7 @@
                 locationError: false,
                 addressError: false,
                 serviceIdError: false,
+                mobileError: false,
 
                 selectedLocationLatLng: null,
                 latLngStr: ''
@@ -409,6 +419,11 @@
                         passed = false;
                     }
 
+                    if (this.service.mobile.trim() === '') {
+                        this.mobileError = true
+                        passed = false;
+                    }
+
                     if (this.service.service_id.trim() === '') {
                         this.serviceIdError = true
                         passed = false;
@@ -423,9 +438,10 @@
                     this.service.description = ''
                     this.service.location = ''
                     this.service.address = ''
-                    this.service.service_id = '',
-                    this.selectedLocationLatLng = null,
+                    this.service.service_id = ''
+                    this.selectedLocationLatLng = null
                     this.latLngStr = ''
+                    this.mobile = ''
                 },
 
                 textChanged(e) {
@@ -441,6 +457,9 @@
 
                         case 'address':
                             this.addressError = false;
+                            break;
+                        case 'mobile':
+                            this.mobileError = false;
                             break;
                         default:
                             break;

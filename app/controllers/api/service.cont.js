@@ -13,13 +13,13 @@ exports.get = async (req, resp) => {
 }
 
 exports.save = async (req, resp) => {
-    const { service_id, description, address, location } = req.body
+    const { service_id, description, address, location, mobile } = req.body
 
     console.log('req.body', req.body);
 
     try {
-        var service = await model.companyService.insert('service_id, user_id, description, address, latlng, activated',
-            [ service_id, req.session.user.id, description, address, JSON.stringify(location), true ]
+        var service = await model.companyService.insert('service_id, user_id, description, address, latlng, activated, mobile',
+            [ service_id, req.session.user.id, description, address, JSON.stringify(location), true, mobile ]
         )
 
         service = await model.companyService.withServicesById(service.rows[0].id)

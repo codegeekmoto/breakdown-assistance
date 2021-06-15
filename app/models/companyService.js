@@ -43,7 +43,8 @@ class CompanyService extends Model {
                         services.name,
                         company_services.description,
                         company_services.latlng,
-                        company_services.address
+                        company_services.address,
+                        company_services.mobile
                     FROM services
                         INNER JOIN company_services ON services.id = company_services.service_id
                     WHERE company_services.service_id = $1`;
