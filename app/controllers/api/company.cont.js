@@ -53,6 +53,7 @@ exports.getAssistance = async (req, resp) => {
         )
 
         
+        
     } catch (error) {
         console.log('[company getAssistance controller]', error);
         resp.status(500).send({
