@@ -29,7 +29,10 @@ exports.observeAlert = async (req, resp) => {
     try {
         const myCompany = await model.company.select('user_id', req.session.user.id)
         console.log('myCompany', myCompany.rows);
-        const alerts = await model.companyAlert.find(myCompany.rows[0].id)
+        const alerts = await model.companyAlert.withUser(myCompany.rows[0].id)
+        // const user = await model.user.findById(alerts.rows[0].client_id)
+
+        console.log('alerts', alerts);
 
         return resp.status(200).send({
             status: true, 

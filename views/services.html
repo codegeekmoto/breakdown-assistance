@@ -242,7 +242,7 @@
                         <div class="modal-body">
                            
                             <center>
-                                <h1>David need an automobile assistance!</h1>
+                                <h1>{% clientName %} need an automobile assistance!</h1>
                             </center>
 
                             <div class="mt-3">
@@ -306,7 +306,8 @@
                 mobileError: false,
 
                 selectedLocationLatLng: null,
-                latLngStr: ''
+                latLngStr: '',
+                clientName: 'Juan'
             },
 
             mounted() {
@@ -341,6 +342,7 @@
                                     console.log('alert', alert);
 
                                     if (!alert.is_received) {
+                                        app.clientName = alert.fname;
                                         $("#alert-modal").modal('show');
                                         app.receiveAlert(alert.id)
                                     }
