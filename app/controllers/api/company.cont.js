@@ -28,6 +28,7 @@ exports.updateService = async (req, resp) => {
 exports.observeAlert = async (req, resp) => {
     try {
         const myCompany = await model.company.select('user_id', req.session.user.id)
+        console.log('myCompany', myCompany.rows);
         const alerts = await model.companyAlert.find(myCompany.rows[0].id)
 
         return resp.status(200).send({
@@ -47,15 +48,42 @@ exports.getAssistance = async (req, resp) => {
     const { service_id, user_id  } = req.body
 
     try {
+        const companyService = await model.companyService.findById(service_id)
+
+        console.log('companyService', companyService.rows);
+
         const alert = await model.companyAlert.insert(
-            'company_service_id, client_id, is_accepted, is_received, is_valid',
-            [service_id, user_id, false, false, true]
+            'company_id, company_service_id, client_id, is_accepted, is_received, is_valid',
+            [companyService.rows[0].company_id, service_id, user_id, false, false, true]
         )
 
-        
+        return resp.status(200).send({
+            status: true, 
+            alert: alert.rows[0]
+        });
         
     } catch (error) {
         console.log('[company getAssistance controller]', error);
+        resp.status(500).send({
+            status: false,
+            error: error.message
+        })
+    }
+}
+
+exports.receiveAlert = async (req, resp) => {
+    const { alert_id  } = req.body
+
+    try {
+        const alert = await model.companyAlert.update('is_received', true, 'id', alert_id)
+
+        return resp.status(200).send({
+            status: true, 
+            alert: alert.rows
+        });
+        
+    } catch (error) {
+        console.log('[company receiveAlert controller]', error);
         resp.status(500).send({
             status: false,
             error: error.message

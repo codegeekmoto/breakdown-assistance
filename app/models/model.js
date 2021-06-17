@@ -35,6 +35,13 @@ class Model {
         return await this.execute(sql, null)
     }
 
+    async findById(id) {
+        const sql =`SELECT * FROM ${this.tableName} 
+                    WHERE id = $1`;
+
+        return await this.execute(sql, [id])
+    }
+
     async update(colName, colValue, whereCol, whereValue) {
         const sql =`UPDATE ${this.tableName} 
                     SET ${colName} = $1

@@ -318,17 +318,36 @@
             // 
             methods: {
 
+                receiveAlert(id) {
+                    axios.post('/service/alert/receive', {
+                        alert_id: id
+                        })
+                        .then(result => {
+                            console.log('ALERT RECEIVE SUCCESS ========================= ');
+                            // setTimeout(app.observeAlert, 1000)
+                        }).catch(err => {
+                            console.log('Error', err);                       
+                        });
+                },
+
                 observeAlert() {
                     console.log('CALLING ALERTS ========================= ');
                     axios.get('/service/alert')
                         .then(result => {
                             if (result.data.status) {
                                 console.log('ALERTS', result.data.alerts);
+
+                                for (let alert of result.data.alerts) {
+                                    console.log('alert', alert);
+
+                                    if (!alert.is_received) {
+                                        $("#alert-modal").modal('show');
+                                        app.receiveAlert(alert.id)
+                                    }
+                                }
                             }
 
-                            $('#alert-modal').modal('show');
-
-                            //setTimeout(app.observeAlert, 1000)
+                            setTimeout(app.observeAlert, 2000)
                         }).catch(err => {
                             console.log('Error', err);                            
                         });

@@ -19,6 +19,8 @@ var apiRoutes = router => {
     // Company
     router.post('/service/update', company.updateService)
     router.get('/service/alert', company.observeAlert)
+    router.post('/service/assistance', company.getAssistance)
+    router.post('/service/alert/receive', company.receiveAlert)
     
     // Services
     router.get('/service/:id', service.get)
