@@ -45,7 +45,7 @@ exports.observeAlert = async (req, resp) => {
 }
 
 exports.getAssistance = async (req, resp) => {
-    const { service_id, user_id  } = req.body
+    const { service_id, user_id, lat, lng  } = req.body
 
     try {
         const companyService = await model.companyService.findById(service_id)
@@ -53,8 +53,11 @@ exports.getAssistance = async (req, resp) => {
         console.log('companyService', companyService.rows);
 
         const alert = await model.companyAlert.insert(
-            'company_id, company_service_id, client_id, is_accepted, is_received, is_valid',
-            [companyService.rows[0].company_id, service_id, user_id, false, false, true]
+            'company_id, company_service_id, client_id, is_accepted, is_received, is_valid, client_latlng',
+            [companyService.rows[0].company_id, service_id, user_id, false, false, true, {
+                lat: lat,
+                lng: lng
+            }]
         )
 
         return resp.status(200).send({
