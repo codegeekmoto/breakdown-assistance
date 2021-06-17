@@ -66,6 +66,8 @@ exports.register = async (req, resp) => {
         })
     }
 
+    console.log('regoster user body', body);
+
     const userExist = await model.user.select('email', body.email)
 
     if (userExist.rowCount > 0) {
@@ -80,11 +82,26 @@ exports.register = async (req, resp) => {
 
         try {
 
-            const colSet = 'fname, lname, email, role, phone, picture, password';
+            const colSet = 'fname, lname, email, role, phone, picture, password, activated';
             const insertData = [body.fname, body.lname, body.email, body.role, body.phone, 
-                                body.picture === undefined ? '' : body.picture, hash];
+                                body.picture === undefined ? '' : body.picture, hash, true];
 
             const newUser = await model.user.insert(colSet, insertData)
+            
+            if (body.role === 'owner') {
+                const company = await model.company.insert(
+                    'user_id, name, activated',
+                    [newUser.rows[0].id, body.company, true]
+                )
+            }
+
+            if (body.role === 'mechanic' && body.is_company != undefined  && body.is_company != null) {
+                const mechanicComp = await model.company.select('user_id', req.session.user.id)
+                const companyMechanic = await model.companyMechanic.insert(
+                    'user_id, company_id, activated',
+                    [newUser.rows[0].id, mechanicComp.rows[0].id, true]
+                )
+            }
 
             return resp.status(200).send({
                 status: true, 

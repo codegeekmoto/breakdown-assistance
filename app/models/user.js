@@ -48,6 +48,11 @@ class User extends Model {
         const sql =`SELECT * FROM users WHERE id = $1`;
         return await this.execute(sql, [id])
     }
+
+    async selectActivated(role) {
+        const sql =`SELECT * FROM users WHERE role = $1 AND activated`;
+        return await this.execute(sql, [role])
+    }
 }
 
 module.exports = User;

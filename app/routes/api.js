@@ -5,6 +5,7 @@ var apiRoutes = router => {
     const user = require('../controllers/api/user.cont.api')
     const service = require('../controllers/api/service.cont')
     const mechanic = require('../controllers/api/mechanic.cont')
+    const admin = require('../controllers/api/admin.cont')
 
     // Auth
     router.post('/auth/login', auth.login)
@@ -17,6 +18,7 @@ var apiRoutes = router => {
 
     // Company
     router.post('/service/update', company.updateService)
+    router.get('/service/alert', company.observeAlert)
     
     // Services
     router.get('/service/:id', service.get)
@@ -25,6 +27,11 @@ var apiRoutes = router => {
 
     // Mechanic
     router.get('/mechanic/all/:id', mechanic.all)
+    router.post('/mechanic/activate', mechanic.activate)
+
+
+    // admin
+    router.post('/company/update', admin.updateCompany)
 }
 
 module.exports = apiRoutes;

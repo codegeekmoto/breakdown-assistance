@@ -28,6 +28,14 @@
                             </div>
 
                             <div class="form-group mb-3">
+                                <label for="login_type">Select Your Login</label>
+                                <select v-model="loginType" name="login_type" id="login_type" style="width: 100%; height: 35px">
+                                    <option value="admin">Admin</option>
+                                    <option value="owner">Company</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label for="emailaddress">Email address</label>
                                 <input v-model="email" @change="textChanged" name="email" class="form-control" type="email" id="emailaddress" required="" placeholder="Enter your email">
                                 <ul v-if="emailErr" class="parsley-errors-list filled">
@@ -119,6 +127,7 @@
             delimiters: ["{%", "%}"],
 
             data: {
+                loginType: 'owner',
                 email: 'doe@mail.com',
                 password: '123123',
                 emailErr: false,
@@ -132,17 +141,23 @@
 
                     if (this.isLoggingIn) return
 
+                    console.log('this.loginType', this.loginType);
+
                     if (this.validateLogin()) {
                         this.isLoggingIn = true;
 
                         axios.post('/api/auth/login', {
                             email: app.email,
                             password: app.password,
-                            role: 'owner'
+                            role: app.loginType,
                         })
                         .then(result => {
                             if (result.data.status) {
-                                window.location.href = '/';
+                                if (app.loginType === 'owner') {
+                                    window.location.href = '/';
+                                } else {
+                                    window.location.href = '/admin';
+                                }
                             } else {
                                 app.loginErr = true;
                                 this.isLoggingIn = false;

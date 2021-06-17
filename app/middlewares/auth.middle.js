@@ -32,3 +32,19 @@ exports.activated = (req, resp, next) => {
         resp.redirect('/activate')
     }
 }
+
+exports.isAdmin = (req, resp, next) => {
+    if (req.session.user.role === 'admin') {
+        next()
+    } else {
+        resp.redirect('/')
+    }
+}
+
+exports.isCompany = (req, resp, next) => {
+    if (req.session.user.role === 'owner') {
+        next()
+    } else {
+        resp.redirect('/admin')
+    }
+}

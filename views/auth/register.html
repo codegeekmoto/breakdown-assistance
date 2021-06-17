@@ -49,6 +49,13 @@
                                     </ul>
                                 </div>
                                 <div class="form-group">
+                                    <label for="lname">Company Name</label>
+                                    <input v-model="user.company" @change="textChanged" name="company" class="form-control" type="text" id="company" placeholder="Enter company name" required>
+                                    <ul v-if="companyError" class="parsley-errors-list filled">
+                                        <li class="parsley-required"><small>Last name is required</small>.</li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
                                     <label for="email">Email address</label>
                                     <input v-model="user.email" @change="textChanged" name="email" class="form-control" type="email" id="email" required placeholder="Enter your email">
                                     <ul v-if="emailRequired || emailExists || emailNotValid" class="parsley-errors-list filled">
@@ -142,7 +149,8 @@
                     phone: '',
                     password: '',
                     confirm_password: '',
-                    role: 'owner'
+                    role: 'owner',
+                    company: ''
                 },
 
                 fnameError: false,
@@ -153,6 +161,7 @@
                 passwordError: false,
                 cpasswordError: false,
                 phoneError: false,
+                companyError: false
             }, 
             
             methods: {
@@ -188,6 +197,11 @@
 
                     if (this.user.fname.trim() === '') {
                         this.fnameError = true
+                        passed = false;
+                    }
+
+                    if (this.user.company.trim() === '') {
+                        this.companyError = true
                         passed = false;
                     }
 
@@ -231,6 +245,9 @@
                             this.lnameError = false;
                             break;
                         case 'phone':
+                            this.phoneError = false;
+                            break;
+                        case 'company':
                             this.phoneError = false;
                             break;
                         case 'email':
