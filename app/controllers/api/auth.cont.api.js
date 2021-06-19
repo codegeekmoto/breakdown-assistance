@@ -7,9 +7,13 @@ exports.login = async (req, resp) => {
 
     let {email, role, password} = req.body;
 
+    console.log('email',req.body);
+
     try {
 
         let user = await model.user.login(email, role)
+
+        console.log('user', user.rows);
 
         if (user.rowCount > 0) {
             bcrypt.compare(password, user.rows[0].password, function(error, result) {
@@ -30,6 +34,8 @@ exports.login = async (req, resp) => {
                         })
                     }
                 } else {
+                    console.log(['bcrypt error'], error);
+                    
                     resp.status(500).send({
                         status: false,
                         error: error.message,
@@ -45,6 +51,7 @@ exports.login = async (req, resp) => {
             })
         }        
     } catch (error) {
+        console.log('Auth api controller', error);
         resp.status(500).send({
             status: false,
             error: error.message,
