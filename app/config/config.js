@@ -17,4 +17,11 @@ module.exports = {
     },
     
     secret: 'dxbhmxzsrqeyycpe',
+
+    firebase: {
+        notification_options: {
+            priority: "high",
+            timeToLive: 60 * 60 * 24
+        }
+    }
 }

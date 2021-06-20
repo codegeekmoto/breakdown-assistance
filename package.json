@@ -25,6 +25,7 @@
     "express-useragent": "^1.0.15",
     "express-validator": "^6.6.1",
     "finalhandler": "^1.1.2",
+    "firebase-admin": "^9.9.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "moment": "^2.29.0",

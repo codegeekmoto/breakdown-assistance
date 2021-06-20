@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "automobile-assistance-fff37",
+  "private_key_id": "be967b379f2b1f704298e04c22118efcba39b03f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDVblhxjvy/ZSnZ\nWEX3pGHOKSEpo+3gTFk7108ayaLB8gVRnTJjxDtUwSH1cO7C2pDslTxiEMlE/6ZY\n69gbUD0OCyNXDvy0qbr2PJNUdmiEw9KPQUUSzaplMtycWodUvwdGSEVxwUnUZUUu\nTcf3SUJNsXq2GNs4Nhfnt1UU4JaeutNI+Sp4H/zvbkjt0SGD6yRVbCYJdGlYzqJp\np1FPH8+Y81C0fDeJIHXYym5nJymrG6ItDoToONUlakvpUs5pT1IDxM9L6kHVSCzr\n/m0fdwjUzch9LxL9ncVm4jt9f7hBZwoBoUTQgGdv2dXehYgpOseFLLt+27zNMFOu\nMv6Zk1wbAgMBAAECggEAIyqYULWyTXLvZKFtKIhMQ+TLqF8bUxQhYSvGcUUnQnTh\n4s2s6iVWGqPr4tNlyR4BjQnAi5lKdcpNxWRZaj6xS1QTJvAQO/r6FEJs4BjWezGs\nyu/X4BOab4GO5LBB5iPHoLvzEp2Pevs+B+AcV6bEJvsG8LltvXhO6LNwxbeE+cga\nVQUfv2MQFVbWMJiBVVfqx1YWh0AW4XcDnXBc5VdYOguMfL7xKmrtVh7U7WYFiXN4\n1J8jpSgVkwU376QVOQszrn/sdbFSDCPgD4iq3BrZJV5BXz0iTypDKj5/dLO8JiLw\n8HMbq0/Otox14KEmNAcztQeMVo/50mNm+R88ivugoQKBgQDq+2JbSLYVYwvDg2xa\nLPPnWSuiM3nAA4whh+B7hh4nBPaLkM6z2bn0av2dfAwSC/Yh+QnSd3wUPA7JrcUS\nG+mmfrv4aQkbYA71u2okkp5L08irnxTLvCvKVnykmapofNb3PwFuVNs+JQ1Q1bIi\nhmtzKvfSXvd6r5wFbww/TT7G6wKBgQDohXz3RShn2+ClyB24szaMvylK+kKuar/B\nZQ2DvbNEvLTGJNZRHeHme/8tYy9Q8Vj8i8ytmNlDm5YfTBfRgGnJKTOZvP4QRc+D\n99yjB+EDnXyoyuM/m1ySszwh4anX/k3LKaO/KSnyFcj+M184FwWL7shWiAvjSxOK\n2p6IXvPTkQKBgQCyTXgPrjfEOLjXbWUNc+jLVoVeedLbmZV+Z/01ncpJb2Go+4Nt\nQzvwNDMnidYa54qnsrH6SwIS1JOgA0RzfkyoMqhtUT5A0H3phoF/KOYGwbgWSgrc\noXdU/JVtzNBaosf3Ko7qamdGW5UkDlMyEW99H1CXB8qgBJrOILpZWkLVawKBgGeA\nI+QdUKMKaLDipvg0La/w13yccVoaAkkfpihiJI4QQZeBhjSNTKS/xRJ69/DbvXSM\n9gq/4tYJR4We5WtH8c6tHF7ulVjA+mIPzpJzS2HElFy+EvGZQle6mKWsQWH3vMEW\nQ+EvfZBYyiL80wGwnbNwEpUR8di27nf8YFzrhzVBAoGAW3ImN01BT0r0fdomDVaz\n7QKir04VDDQ8M/lWW2jHtfs+aQncWY/gIv/t34EcCyMos4Mf8bYywbbjpLbzUPzY\nSwHliF7k7o6ZoGcn3lgKMi+JDOfvE87+dWvIYCjUog6RZ8cOZHlbhb7UwGHjX93C\n4uk7N2TiqdDdZHbvVzhfTr4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-lero7@automobile-assistance-fff37.iam.gserviceaccount.com",
+  "client_id": "109391248894998523355",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-lero7%40automobile-assistance-fff37.iam.gserviceaccount.com"
+}

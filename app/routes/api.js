@@ -34,6 +34,37 @@ var apiRoutes = router => {
 
     // admin
     router.post('/company/update', admin.updateCompany)
+
+
+    // test notif
+    var notif = require('../helpers/notification')
+    router.post('/notification/send', function(req, resp) {
+
+        var { token, message } = req.body
+
+        var content = {
+            data: {
+                message: message
+            },
+            notification: {
+                title: "Testing FCM",
+                body: message
+            }
+       }
+
+        notif.send(token, content)
+        .then( response => {
+
+            console.log('FCM RESPONSE', response);
+
+            resp.status(200).send("Notification sent successfully")
+       
+         })
+        .catch( error => {
+          console.log('[ FIREBASE ERROR ]', error);
+          resp.status(200).send("Notification sending failed")
+        });
+    })
 }
 
 module.exports = apiRoutes;

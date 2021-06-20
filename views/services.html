@@ -266,6 +266,8 @@
 
     {{> right-setting-bar }}
 
+    {{> fcm }}
+
     <!-- Axios js-->
     <script src="/app/lib/axios.js"></script>
     <!-- vue js -->
@@ -311,9 +313,11 @@
             },
 
             mounted() {
+                initFCM()
+
                 console.log('services', this.serviceTypes);
                 this.renderMap()
-                this.observeAlert()
+                //this.observeAlert()
             },
             
             // 
