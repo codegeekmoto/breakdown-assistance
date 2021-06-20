@@ -6,6 +6,7 @@ var apiRoutes = router => {
     const service = require('../controllers/api/service.cont')
     const mechanic = require('../controllers/api/mechanic.cont')
     const admin = require('../controllers/api/admin.cont')
+    const notif = require('../controllers/api/notification.cont')
 
     // Auth
     router.post('/auth/login', auth.login)
@@ -31,40 +32,11 @@ var apiRoutes = router => {
     router.get('/mechanic/all/:id', mechanic.all)
     router.post('/mechanic/activate', mechanic.activate)
 
-
     // admin
     router.post('/company/update', admin.updateCompany)
 
-
-    // test notif
-    var notif = require('../helpers/notification')
-    router.post('/notification/send', function(req, resp) {
-
-        var { token, message } = req.body
-
-        var content = {
-            data: {
-                message: message
-            },
-            notification: {
-                title: "Testing FCM",
-                body: message
-            }
-       }
-
-        notif.send(token, content)
-        .then( response => {
-
-            console.log('FCM RESPONSE', response);
-
-            resp.status(200).send("Notification sent successfully")
-       
-         })
-        .catch( error => {
-          console.log('[ FIREBASE ERROR ]', error);
-          resp.status(200).send("Notification sending failed")
-        });
-    })
+    // FCM Notification
+    router.post('/fcm/register', notif.registerToken)
 }
 
 module.exports = apiRoutes;

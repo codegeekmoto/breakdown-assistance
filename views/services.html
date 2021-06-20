@@ -266,8 +266,6 @@
 
     {{> right-setting-bar }}
 
-    {{> fcm }}
-
     <!-- Axios js-->
     <script src="/app/lib/axios.js"></script>
     <!-- vue js -->
@@ -276,6 +274,8 @@
     <script src="/app/lib/xlxs.js"></script>
     <script src="/app/lib/file-saver.js"></script>
     <script src="/app/lib/xlxs-full.js"></script>
+
+    {{> fcm }}
 
     <script>
         var services = JSON.parse(document.querySelector('#servicesData').innerHTML)

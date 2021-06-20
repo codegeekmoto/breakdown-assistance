@@ -4,9 +4,7 @@ const model = require('../../models/datasource')
 exports.services = async (req, resp) => {
     var companyServices = await model.companyService.withServices(req.session.user.id)
     var services = await model.service.selectAll()
-
-    console.log('services.rows', companyServices.rows);
-
+    
     resp.render('services', {
         title: 'Services',
         user: req.session.user,
