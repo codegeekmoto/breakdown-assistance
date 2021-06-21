@@ -313,7 +313,7 @@
             },
 
             mounted() {
-                initFCM()
+                initFCM(this.fcmOnMessage)
 
                 console.log('services', this.serviceTypes);
                 this.renderMap()
@@ -323,12 +323,16 @@
             // 
             methods: {
 
+                fcmOnMessage(payload) {
+                    var data = JSON.parse(payload.data.alert)
+                    console.log('fcmOnMessage', data);
+                },
+
                 receiveAlert(id) {
                     axios.post('/service/alert/receive', {
                         alert_id: id
                         })
                         .then(result => {
-                            console.log('ALERT RECEIVE SUCCESS ========================= ');
                             // setTimeout(app.observeAlert, 1000)
                         }).catch(err => {
                             console.log('Error', err);                       
@@ -336,7 +340,6 @@
                 },
 
                 observeAlert() {
-                    console.log('CALLING ALERTS ========================= ');
                     axios.get('/service/alert')
                         .then(result => {
                             if (result.data.status) {

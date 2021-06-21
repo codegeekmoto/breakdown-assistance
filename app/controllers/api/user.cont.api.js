@@ -45,3 +45,14 @@ exports.changePassword = async (req, resp) => {
         resp.status(500).send({status: false, error: error.message, code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR})
     }
 }
+
+exports.logout = async (req, resp) => {
+    // var { user_id } = req.body
+
+    // try {
+    //     await model.fcmToken.update
+    // } catch (error) {
+    //     console.log('[user logout controller]', error)
+    //     resp.status(500).send({status: false, error: error.message, code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR})
+    // }
+}

@@ -1,4 +1,12 @@
-function initFCM() {
+function initFCM(onMessageCallback) {
+
+    // Background notification lisener
+    const channel = new BroadcastChannel('automobile-assistance');
+    channel.addEventListener('message', event => {
+        console.log('BroadcastChannel Client', event.data);
+        // onMessageCallback(event.data)
+    });
+
     var firebaseConfig = {
         apiKey: "AIzaSyCljKb38Agr-kGHx0IVPh8ehWKtPIfa0Mc",
         authDomain: "automobile-assistance-fff37.firebaseapp.com",
@@ -34,5 +42,8 @@ function initFCM() {
 
     messaging.onMessage((payload) => {
         console.log('[firebase-messaging - Foreground]', payload);
+        onMessageCallback(payload)
     });
+
+    // From your client pages:
 }

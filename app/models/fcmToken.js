@@ -12,6 +12,12 @@ class FcmToken extends Model {
                         AND token = $2`
         return this.execute(sql, [userId, token])
     }
+
+    async whereIn(strIds) {
+        const sql =`SELECT * FROM fcm_token
+                    WHERE user_id IN (${strIds})`
+        return this.execute(sql)
+    }
 }
 
 module.exports = FcmToken

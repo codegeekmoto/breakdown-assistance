@@ -1,4 +1,5 @@
 const model = require('../../models/datasource')
+const notif = require('../../helpers/notification')
 
 exports.updateService = async (req, resp) => {
     const { id, activate } = req.body
@@ -53,8 +54,6 @@ exports.getAssistance = async (req, resp) => {
     try {
         const companyService = await model.companyService.findById(service_id)
 
-        console.log('companyService', companyService.rows);
-
         const alert = await model.companyAlert.insert(
             'company_id, company_service_id, client_id, is_accepted, is_received, is_valid, client_latlng',
             [companyService.rows[0].company_id, service_id, user_id, false, false, true, {
@@ -62,6 +61,23 @@ exports.getAssistance = async (req, resp) => {
                 lng: lng
             }]
         )
+        
+        // Send notif
+        var fcmTk = await model.fcmToken.select('user_id', companyService.rows[0].user_id)
+
+        var content = {
+            topic: 'get-assistance',
+            data: {
+                type: 'get-assistance',
+                content: JSON.stringify(alert.rows[0])
+            },
+            notification: {
+                title: 'Get Assistance',
+                body: ''
+            }
+        }
+
+        await notif.send(fcmTk.rows[0].token, content)
 
         return resp.status(200).send({
             status: true, 

@@ -7,6 +7,7 @@ var apiRoutes = router => {
     const mechanic = require('../controllers/api/mechanic.cont')
     const admin = require('../controllers/api/admin.cont')
     const notif = require('../controllers/api/notification.cont')
+    const assistance = require('../controllers/api/assistance.cont')
 
     // Auth
     router.post('/auth/login', auth.login)
@@ -32,11 +33,15 @@ var apiRoutes = router => {
     router.get('/mechanic/all/:id', mechanic.all)
     router.post('/mechanic/activate', mechanic.activate)
 
+    // Assistance
+    router.post('/assistance', assistance.getAssistance)
+
     // admin
     router.post('/company/update', admin.updateCompany)
 
     // FCM Notification
     router.post('/fcm/register', notif.registerToken)
+    router.post('/fcm/send', notif.send)
 }
 
 module.exports = apiRoutes;

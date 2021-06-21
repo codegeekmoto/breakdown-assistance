@@ -37,46 +37,39 @@ exports.registerToken = async (req, resp) => {
             code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR
         })
     }
-    
-    // var { token, message } = req.body
-
-    //     var content = {
-    //         data: {
-    //         message: message
-    //     },
-    //     notification: {
-    //         title: "Testing FCM",
-    //         body: message
-    //     }
-    // }
-
-    // notif.send(token, content)
-    // .then( response => {
-
-    //     console.log('FCM RESPONSE', response);
-
-    //     resp.status(200).send("Notification sent successfully")
-       
-    //  })
-    // .catch( error => {
-    //     console.log('[ FIREBASE ERROR ]', error);
-    //      resp.status(200).send("Notification sending failed")
-    // });
 }
 
-exports.send = (req, resp) => {
+exports.send = async (req, resp) => {
 
-    var { ids, message } = req.body
+    var { message, user_id } = req.body
 
-    console.log('ids', ids);
+    var fcmTk = await model.fcmToken.select('user_id', user_id)
+    
 
-    //     var content = {
-    //         data: {
-    //         message: message
-    //     },
-    //     notification: {
-    //         title: "Testing FCM",
-    //         body: message
-    //     }
-    // }
+    if (fcmTk.rowCount > 0) {
+
+        var content = {
+            data: {
+                message: message
+            },
+            notification: {
+                title: "Testing FCM",
+                body: message
+            }
+        }
+
+        notif.send(fcmTk.rows[0].token, content)
+
+        .then( response => {
+            console.log('FCM RESPONSE', response);
+            resp.status(200).send("Notification sent successfully")
+        })
+        .catch( error => {
+            console.log('[ FIREBASE ERROR ]', error);
+            resp.status(200).send("Notification sending failed")
+        });
+
+    } else {
+        resp.status(200).send("No receiver found")
+    }
 }
