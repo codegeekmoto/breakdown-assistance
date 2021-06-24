@@ -415,11 +415,15 @@
                     $("#alert-modal").modal('show');
                 },
 
-                fcmOnMessage(data) {
-                    var detail = JSON.parse(data.payload.data.content)
+                fcmOnMessage(payload) {
+                    console.log('fcmOnMessage', payload.data);
+                    var detail = JSON.parse(payload.data.content)
                     console.log('detail', detail);
                     this.clientName = detail.client.fname
                     console.log('fcmOnMessage', detail);
+
+                    this.assistanceDetail = detail
+
                     $('#alert-modal').modal({backdrop: 'static', keyboard: false})
                     $("#alert-modal").modal('show');
                 },

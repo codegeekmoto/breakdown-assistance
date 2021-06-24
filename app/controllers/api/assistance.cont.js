@@ -28,6 +28,11 @@ exports.getAssistance = async (req, resp) => {
             serviceLoc = companyService.rows[0].latlng
         }
 
+        var jobs = await model.job.insert(
+            'company_service_id, mechanic_id, client_id, client_loc, status',
+            [  service_id, mechanic_id, user_id, { lat: lat, lng: lng }, 'requesting' ]
+        )
+
         var detail = {
             client: client.rows[0],
             mechanic_id: mechanic_id,
@@ -45,7 +50,7 @@ exports.getAssistance = async (req, resp) => {
                 content: JSON.stringify(detail)
             },
             notification: {
-                title: 'Assistance Accepted',
+                title: 'Need Assistance',
                 body: ''
             }
         }
@@ -67,14 +72,16 @@ exports.getAssistance = async (req, resp) => {
 }
 
 exports.accept = async (req, resp) => {
-    var { company_service_id, mechanic_id, client_id, client_loc } = req.body
+    var { job_id } = req.body
 
     try {
 
-        var jobs = await model.job.insert(
-            'company_service_id, mechanic_id, client_id, client_loc, status',
-            [  company_service_id, mechanic_id, client_id, client_loc, 'on-progress' ]
-        )
+        // var jobs = await model.job.insert(
+        //     'company_service_id, mechanic_id, client_id, client_loc, status',
+        //     [  company_service_id, mechanic_id, client_id, client_loc, 'on-the-way' ]
+        // )
+
+        var jobs = await model.job.update('status', 'accepted', 'id', job_id)
 
         var content = {
             data: {
@@ -83,11 +90,11 @@ exports.accept = async (req, resp) => {
             },
             notification: {
                 title: 'Get Assistance',
-                body: 'Your request has been accepted. Mechanic is on your way!'
-            }
+                body: 'Your request has been accepted. Mechanic is on the way to you!'
+            } 
         }
         
-        await notif.sendTo(client_id, content)
+        await notif.sendTo(jobs.rows[0].client_id, content)
 
         return resp.status(200).send({
             status: true, 
@@ -113,7 +120,7 @@ exports.refuse = async (req, resp) => {
                 type: 'assistance-refused',
                 content: 'Assistance is refued'
             },
-            
+
             notification: {
                 title: 'Get Assistance',
                 body: 'Sorry, your request has been refused.'
