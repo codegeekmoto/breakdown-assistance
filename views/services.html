@@ -47,6 +47,10 @@
                                             <i class="fas fa-plus"></i> Add
                                         </button>
 
+                                        <button @click="test" type="button" class="tabledit-edit-button btn btn-success" style="float: none;" data-backdrop="static" data-keyboard="false" data-toggle="modal">
+                                            <i class="fas fa-plus"></i> Test
+                                        </button>
+
                                          <!-- <h4 class="header-title mb-0">Result</h4> -->
 
                                          <div id="cardCollpase5" class="collapse pt-3 show">
@@ -232,6 +236,17 @@
             <!-- End Map Modal -->
 
 
+
+
+
+
+
+
+
+
+            
+
+
             <!-- Alert Modal -->
             <!-- Add services modal -->
             <div class="modal fade" id="alert-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
@@ -247,9 +262,12 @@
 
                             <div class="mt-3">
                                <center>
-                                    <button class="btn btn-danger" data-dismiss="modal" style="width: 120px;">Reject</button>
-                                    <button data-dismiss="modal" class="btn btn-success" style="width: 120px;">
-                                        Accept
+                                    <button @click="accept" class="btn btn-success" style="width: 120px;">
+                                        <span v-if="!isAccepting">Accept</span>
+                                        <span v-if="isAccepting"><i class="fas fa-circle-o-notch fa-spin"></i></span>
+                                    </button>
+                                    <button @click="refuse" class="btn btn-danger" style="width: 120px;">
+                                        Refuse
                                     </button>
                                </center>
                             </div>
@@ -258,7 +276,42 @@
                     </div><!-- /.modal-content -->
                 </div>
             </div>
+            <!-- End Alert Modal -->
+
+
+            <!-- Map Modal -->
+            <!-- Add services modal -->
+            <div class="modal fade" id="assistance-map" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myLargeModalLabel">Automobile Assistance Map</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                           
+                            <div id='assistace_map' style='height: 400px;'></div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </div>
             <!-- End Map Modal -->
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </div>
         <!-- END wrapper -->
@@ -309,7 +362,10 @@
 
                 selectedLocationLatLng: null,
                 latLngStr: '',
-                clientName: 'Juan'
+                clientName: '',
+
+                assistanceDetail: null,
+                isAccepting: false
             },
 
             mounted() {
@@ -323,10 +379,136 @@
             // 
             methods: {
 
-                fcmOnMessage(payload) {
-                    var data = JSON.parse(payload.data.alert)
-                    console.log('fcmOnMessage', data);
+                test() {
+
+                    var detail = {
+                        "client": {
+                            "id": 12,
+                            "fname": "Test",
+                            "lname": "ara",
+                            "email": "arajeli.kempis@evsu.edu.ph",
+                            "role": "customer",
+                            "phone": "09274385581",
+                            "picture": "",
+                            "password": "$2a$10$QvR9JGxwyaBdEdIvJv.Hp.cUbJejCFiZE1z1jFm4vFQHKqHtWOMxW",
+                            "token": null,
+                            "created_at": "2021-06-13T19:08:10.734Z",
+                            "updated_at": "2021-06-13T19:08:10.734Z",
+                            "activated": true
+                        },
+                        "service_id": 29,
+                        "client_loc": {
+                            "lat":  11.132194, // 11.132194, 125.007872
+                            "lng": 125.007872
+                        },
+                        "service_loc":{
+                            "lat": 11.235059392447312,
+                            "lng": 125.00076227165533
+                        }
+                    }
+
+                    this.assistanceDetail = detail
+                    this.clientName = detail.client.fname
+
+                
+                    $('#alert-modal').modal({backdrop: 'static', keyboard: false})
+                    $("#alert-modal").modal('show');
                 },
+
+                fcmOnMessage(data) {
+                    var detail = JSON.parse(data.payload.data.content)
+                    console.log('detail', detail);
+                    this.clientName = detail.client.fname
+                    console.log('fcmOnMessage', detail);
+                    $('#alert-modal').modal({backdrop: 'static', keyboard: false})
+                    $("#alert-modal").modal('show');
+                },
+
+                accept() {
+                    if (this.isAccepting) return
+
+                    this.isAccepting = true
+                    axios.post('/accept', {
+                            "company_service_id": 29,
+                            "mechanic_id": null,
+                            "client_id": 29,
+                            "client_loc": {
+                                "lat": 11.235059392447312,
+                                "lng": 125.00076227165533
+                            }
+                        })
+                        .then(result => {
+                            // setTimeout(app.observeAlert, 1000)
+                            this.isAccepting = false
+                            this.renderAssistanceMap()
+                            $("#alert-modal").modal('hide');
+                            $('#assistance-map').modal({backdrop: 'static', keyboard: false})
+                            $("#assistance-map").modal('show');
+                            $("#assistance-map").modal('hide');
+                            $("#assistance-map").modal('show');
+                        }).catch(err => {
+                            console.log('Error', err);                       
+                        });
+                },
+
+                refuse() {
+                    axios.post('/refuse', {
+                            "client_id": 29,
+                        })
+                        .then(result => {
+                            // setTimeout(app.observeAlert, 1000)
+                        }).catch(err => {
+                            console.log('Error', err);                       
+                        });
+                },
+
+                renderAssistanceMap() {
+                    mapboxgl.accessToken = 'pk.eyJ1IjoianVuZnJlZWNzcyIsImEiOiJja3B0bzhla3kwNHl0MnhwOTN6ZGpxZHZ5In0.bk2iOlhxIwYNEKhcS6IasA';
+                    var loc = new mapboxgl.LngLat(this.assistanceDetail.client_loc.lng, this.assistanceDetail.client_loc.lat)
+
+                    var map = new mapboxgl.Map({
+                        container: 'assistace_map',
+                        style: 'mapbox://styles/mapbox/streets-v11',
+                        zoom: 8,
+                        center: [
+                            this.assistanceDetail.client_loc.lng,
+                            this.assistanceDetail.client_loc.lat
+                        ]
+                    });
+
+                    var marker1 = new mapboxgl.Marker()
+                        .setLngLat([
+                            this.assistanceDetail.client_loc.lng,
+                            this.assistanceDetail.client_loc.lat
+                        ])
+                        .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+                        .setHTML(
+                            `<div>
+                                <p><b>Name:</b> Ara Mina</p>
+                                <p><b>Distance: </b> 100km</p>
+                            </div>`
+                        ))
+                        .addTo(map);
+
+                },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 receiveAlert(id) {
                     axios.post('/service/alert/receive', {
@@ -367,7 +549,8 @@
                     var map = new mapboxgl.Map({
                         container: 'map',
                         style: 'mapbox://styles/mapbox/streets-v11',
-                        zoom: 16
+                        zoom: 8,
+                        center: [125.001001, 11.204908]
                     });
 
                     map.on('style.load', function() {

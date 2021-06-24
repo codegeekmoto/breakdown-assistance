@@ -4,7 +4,7 @@ function initFCM(onMessageCallback) {
     const channel = new BroadcastChannel('automobile-assistance');
     channel.addEventListener('message', event => {
         console.log('BroadcastChannel Client', event.data);
-        // onMessageCallback(event.data)
+        onMessageCallback(event.data)
     });
 
     var firebaseConfig = {

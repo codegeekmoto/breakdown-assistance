@@ -6,6 +6,7 @@ const Company = require('./company')
 const CompanyMechanic = require('./companyMechanic')
 const CompanyAlert = require('./companyAlert')
 const FcmToken = require('./fcmToken')
+const Job = require('./jobs')
 
 module.exports = {
     user: new User(),
@@ -14,5 +15,6 @@ module.exports = {
     companyService: new CompanyService(),
     companyMechanic: new CompanyMechanic(),
     companyAlert: new CompanyAlert(),
-    fcmToken: new FcmToken()
+    fcmToken: new FcmToken(),
+    job: new Job()
 }
