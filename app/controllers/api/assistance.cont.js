@@ -1,5 +1,6 @@
 var model = require('../../models/datasource')
 var notif = require('../../helpers/notification')
+var randomstring = require("randomstring");
 
 exports.getAssistance = async (req, resp) => {
     const { mechanic_id, service_id, user_id, lat, lng  } = req.body
@@ -31,9 +32,13 @@ exports.getAssistance = async (req, resp) => {
             ownerId = companyService.rows[0].user_id
         }
 
+        var code = await randomstring.generate(5);
+
+        console.log('code', code);
+
         var jobs = await model.job.insert(
-            'company_service_id, owner_id,  mechanic_id, client_id, client_loc, status',
-            [  service_id, ownerId,  mechanic_id, user_id, { lat: lat, lng: lng }, 'Requesting' ]
+            'company_service_id, owner_id,  mechanic_id, client_id, client_loc, status, code',
+            [  service_id, ownerId,  mechanic_id, user_id, { lat: lat, lng: lng }, 'Requesting', code ]
         )
 
         var detail = {
