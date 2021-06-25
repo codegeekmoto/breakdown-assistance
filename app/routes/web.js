@@ -10,7 +10,8 @@ var webRoutes = (router) => {
     router.get('/login', auth.login)
     router.get('/register', auth.register)
 
-    router.get('/', middleware.auth, middleware.isCompany, pages.services)
+    router.get('/', middleware.auth, middleware.isCompany, pages.jobs)
+    router.get('/services', middleware.auth, middleware.isCompany, pages.services)
     router.get('/mechanics', middleware.auth, middleware.isCompany, pages.mechanics)
     router.get('/profile', middleware.auth, middleware.isCompany, pages.profile)
 

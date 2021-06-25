@@ -1,5 +1,20 @@
 const model = require('../../models/datasource')
 
+exports.jobs = async (req, resp) => {
+
+    var jobs = await model.job.all(req.session.user.id)
+    const myCompany = await model.company.select('user_id', req.session.user.id)
+    const myMechanic = await model.companyMechanic.findById(myCompany.rows[0].id)
+
+    console.log('jobs', jobs.rows);
+
+    resp.render('job', {
+        title: 'Jobs',
+        user: req.session.user,
+        jobs: JSON.stringify(jobs.rows),
+        myMechanics: JSON.stringify(myMechanic.rows)
+    })
+}
 
 exports.services = async (req, resp) => {
     var companyServices = await model.companyService.withServices(req.session.user.id)
@@ -17,7 +32,7 @@ exports.mechanics = async (req, resp) => {
     const myCompany = await model.company.select('user_id', req.session.user.id)
     var mechanics = await model.user.selectActivated('mechanic')
     console.log('mechanics', mechanics.rows);
-
+    
     const myMechanic = await model.companyMechanic.findById(myCompany.rows[0].id)
 
     console.log('myMechanic', myMechanic.rows);

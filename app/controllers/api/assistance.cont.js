@@ -10,9 +10,11 @@ exports.getAssistance = async (req, resp) => {
 
         var recieverTk = null
         var serviceLoc = null
+        var ownerId = null
         var client = await model.user.findById(user_id)
 
         console.log('mechanic_id', mechanic_id);
+
 
         if (mechanic_id !== null && mechanic_id !== undefined) {
             var fcm = await model.fcmToken.select('user_id', mechanic_id)
@@ -26,11 +28,12 @@ exports.getAssistance = async (req, resp) => {
             console.log('fcm service_id', fcm.rows);
             recieverTk = fcm.rows[0].token
             serviceLoc = companyService.rows[0].latlng
+            ownerId = companyService.rows[0].user_id
         }
 
         var jobs = await model.job.insert(
-            'company_service_id, mechanic_id, client_id, client_loc, status',
-            [  service_id, mechanic_id, user_id, { lat: lat, lng: lng }, 'requesting' ]
+            'company_service_id, owner_id,  mechanic_id, client_id, client_loc, status',
+            [  service_id, ownerId,  mechanic_id, user_id, { lat: lat, lng: lng }, 'Requesting' ]
         )
 
         var detail = {
@@ -72,16 +75,17 @@ exports.getAssistance = async (req, resp) => {
 }
 
 exports.accept = async (req, resp) => {
-    var { job_id } = req.body
+    var { job_id, mechanic_id } = req.body
+    
+
+    console.log('mechanic_id', mechanic_id);
 
     try {
 
-        // var jobs = await model.job.insert(
-        //     'company_service_id, mechanic_id, client_id, client_loc, status',
-        //     [  company_service_id, mechanic_id, client_id, client_loc, 'on-the-way' ]
-        // )
+        var mechanicJob = await model.mechanicJob.insert('job_id, mechanic_id', [job_id, mechanic_id])
+        var jobs = await model.job.update('status', 'Accepted', 'id', job_id)
 
-        var jobs = await model.job.update('status', 'accepted', 'id', job_id)
+        console.log('jobs', jobs.rows);
 
         var content = {
             data: {
@@ -111,9 +115,11 @@ exports.accept = async (req, resp) => {
 }
 
 exports.refuse = async (req, resp) => {
-    var { client_id } = req.body
+    var { client_id, job_id } = req.body
 
     try {
+
+        var job = await model.job.update('status', 'Refused', 'id', job_id)
         
         var content = {
             data: {
@@ -131,7 +137,7 @@ exports.refuse = async (req, resp) => {
 
         return resp.status(200).send({
             status: true, 
-            message: 'Assistance succesfully refused!'
+            job: job.rows[0]
         });
 
     } catch (error) {

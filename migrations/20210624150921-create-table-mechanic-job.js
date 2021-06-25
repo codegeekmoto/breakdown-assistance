@@ -15,32 +15,20 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('jobs', {
+  return db.createTable('mechanic_jobs', {
     id: {
       type: 'int',
       primaryKey: true,
       autoIncrement: true
     },
-    owner_id: {
-      type: 'int'
-    },
-    company_service_id: {
-      type: 'int'
-    },
-    client_id: {
+    job_id: {
       type: 'int'
     },
     mechanic_id: {
       type: 'int'
     },
-    status: {
+    status:{
       type: 'string'
-    },
-    code: {
-      type: 'string'
-    },
-    client_loc: {
-      type: 'json'
     },
     created_at: {
       type: 'timestamp',
@@ -56,7 +44,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return db.dropTable('jobs');
+  return db.dropTable('mechanic_jobs');
 };
 
 exports._meta = {

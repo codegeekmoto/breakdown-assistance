@@ -26,89 +26,11 @@ exports.updateService = async (req, resp) => {
     }
 }
 
-exports.observeAlert = async (req, resp) => {
-    try {
-        const myCompany = await model.company.select('user_id', req.session.user.id)
-        console.log('myCompany', myCompany.rows);
-        const alerts = await model.companyAlert.withUser(myCompany.rows[0].id)
-        // const user = await model.user.findById(alerts.rows[0].client_id)
+exports.jobs = async (req, resp) => {
+    var jobs = await model.job.all(req.session.user.id)
 
-        console.log('alerts', alerts);
-
-        return resp.status(200).send({
-            status: true, 
-            alerts: alerts.rows
-        });
-    } catch (error) {
-        console.log('[company observeAlert controller]', error);
-        resp.status(500).send({
-            status: false,
-            error: error.message
-        })
-    }
-}
-
-exports.getAssistance = async (req, resp) => {
-    const { service_id, user_id, lat, lng  } = req.body
-
-    try {
-        const companyService = await model.companyService.findById(service_id)
-
-        const alert = await model.companyAlert.insert(
-            'company_id, company_service_id, client_id, is_accepted, is_received, is_valid, client_latlng',
-            [companyService.rows[0].company_id, service_id, user_id, false, false, true, {
-                lat: lat,
-                lng: lng
-            }]
-        )
-        
-        // Send notif
-        var fcmTk = await model.fcmToken.select('user_id', companyService.rows[0].user_id)
-
-        var content = {
-            topic: 'get-assistance',
-            data: {
-                type: 'get-assistance',
-                content: JSON.stringify(alert.rows[0])
-            },
-            notification: {
-                title: 'Get Assistance',
-                body: ''
-            }
-        }
-
-        await notif.send(fcmTk.rows[0].token, content)
-
-        return resp.status(200).send({
-            status: true, 
-            alert: alert.rows[0]
-        });
-        
-    } catch (error) {
-        console.log('[company getAssistance controller]', error);
-        resp.status(500).send({
-            status: false,
-            error: error.message
-        })
-    }
-}
-
-exports.receiveAlert = async (req, resp) => {
-    const { alert_id  } = req.body
-
-    try {
-        const alert = await model.companyAlert.update('is_received', true, 'id', alert_id)
-
-        return resp.status(200).send({
-            status: true, 
-            alert: alert.rows
-        });
-        
-    } catch (error) {
-        console.log('[company receiveAlert controller]', error);
-        resp.status(500).send({
-            status: false,
-            error: error.message
-        })
-    }
+    return resp.status(200).send({
+        status: true, 
+        jobs: jobs.rows
+    });
 }

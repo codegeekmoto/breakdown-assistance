@@ -21,7 +21,7 @@ console.log('messaging', messaging);
 messaging.onBackgroundMessage(function(payload) {
     console.log('[firebase-messaging - Service Worker Background] ', payload);
     const channel = new BroadcastChannel('automobile-assistance');
-    channel.postMessage({payload: payload});
+    channel.postMessage(payload);
 
     // self.registration.showNotification(payload.notification.title, {
     //     body: payload.notification.body,

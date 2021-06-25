@@ -20,9 +20,10 @@ var apiRoutes = router => {
 
     // Company
     router.post('/service/update', company.updateService)
-    router.get('/service/alert', company.observeAlert)
-    router.post('/service/assistance', company.getAssistance)
-    router.post('/service/alert/receive', company.receiveAlert)
+    router.get('/jobs', company.jobs)
+    // router.get('/service/alert', company.observeAlert)
+    // router.post('/service/assistance', company.getAssistance)
+    // router.post('/service/alert/receive', company.receiveAlert)
     
     // Services
     router.get('/service/:id', service.get)
@@ -45,6 +46,7 @@ var apiRoutes = router => {
     // FCM Notification
     router.post('/fcm/register', notif.registerToken)
     router.post('/fcm/send', notif.send)
+
 }
 
 module.exports = apiRoutes;
