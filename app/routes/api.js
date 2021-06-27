@@ -39,6 +39,8 @@ var apiRoutes = router => {
     router.post('/accept', assistance.accept)
     router.post('/refuse', assistance.refuse)
 
+    // Client
+    router.post('/transaction', assistance.clientTransaction)
 
     // admin
     router.post('/company/update', admin.updateCompany)

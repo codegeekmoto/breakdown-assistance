@@ -56,3 +56,13 @@ exports.companyService = async (req, resp) => {
         })
     }
 }
+
+exports.getJobs = async (req, resp) => {
+
+    // var data = {
+    //     client: "",
+    //     mechanic: "",
+    //     job: "",
+    //     service: 
+    // }
+}

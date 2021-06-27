@@ -95,7 +95,7 @@ exports.accept = async (req, resp) => {
         var content = {
             data: {
                 type: 'assistance-accepted',
-                content: 'Assistance is coming'
+                content: JSON.stringify(jobs.rows[0])
             },
             notification: {
                 title: 'Get Assistance',
@@ -152,4 +152,27 @@ exports.refuse = async (req, resp) => {
             error: error.message
         })
     }
-}   
+}
+
+
+
+// Client
+
+exports.clientTransaction = async (req, resp) => {
+
+    var { user_id } = req.body
+
+    try {
+        var transac = await model.job.getClientTransaction(user_id)
+        return resp.status(200).send({
+            status: true, 
+            jobs: transac.rows
+        });
+    } catch (error) {
+        console.log('[assistance clientTransaction controller]', error);
+        resp.status(500).send({
+            status: false,
+            error: error.message
+        })
+    }
+}

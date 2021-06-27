@@ -25,6 +25,45 @@ class Job extends Model {
         
         return this.execute(sql, [ userId ])
     }
+
+    async getClientTransaction(userId) {
+
+        const sql =`SELECT
+                        services.name as service_name,
+                        company.name as company_name,
+                        client.fname as client_fname,
+                        client.lname as client_lname,
+                        client.phone as client_phone,
+                        mechanic.fname as mechanic_fname,
+                        mechanic.lname as mechanic_lname,
+                        jobs.*
+                    FROM services
+                        INNER JOIN company_services as CS1 ON services.id = CS1.service_id
+                        INNER JOIN company ON CS1.company_id = company.id
+                        INNER JOIN company_services as CS2 ON company.id = CS2.company_id
+                        LEFT JOIN jobs ON CS2.id = jobs.company_service_id
+                        INNER JOIN users as client ON jobs.client_id = client.id
+                        INNER JOIN jobs as JOB1 ON client.id = JOB1.client_id
+                        LEFT JOIN users as mechanic ON JOB1.mechanic_id = mechanic.id
+                    WHERE jobs.client_id = $1`
+
+        return this.execute(sql, [ userId ])
+    }
+
+    // async get() {
+    //     const sql =`SELECT * 
+    //                 FROM services
+    //                     INNER JOIN company_services
+    //                         ON services.id = company_services.service_id
+    //                     INNER JOIN jobs
+    //                         ON company_services.id = jobs.company_service_id
+    //                     INNER JOIN users
+    //                         ON jobs.client_id = users.id
+    //                 WHERE jobs.owner_id = $1
+    //                 ORDER BY jobs.created_at DESC`
+        
+    //     return this.execute(sql, [ userId ])
+    // }
 }
 
 

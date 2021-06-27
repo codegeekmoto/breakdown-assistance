@@ -39,4 +39,4 @@ exports.activate = async (req, resp) => {
             error: error.message
         })
     }
-}   
+}

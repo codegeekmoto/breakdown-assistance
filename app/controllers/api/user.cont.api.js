@@ -56,3 +56,4 @@ exports.logout = async (req, resp) => {
     //     resp.status(500).send({status: false, error: error.message, code: constants.ERROR.HTTP.INTERNAL_SERVER_ERROR})
     // }
 }
+
