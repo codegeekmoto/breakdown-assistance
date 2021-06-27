@@ -163,10 +163,10 @@ exports.clientTransaction = async (req, resp) => {
     var { user_id } = req.body
 
     try {
-        var transac = await model.job.getClientTransaction(user_id)
+        var transac = await getClientJobs(user_id)
         return resp.status(200).send({
             status: true, 
-            jobs: transac.rows
+            jobs: transac
         });
     } catch (error) {
         console.log('[assistance clientTransaction controller]', error);
@@ -175,4 +175,41 @@ exports.clientTransaction = async (req, resp) => {
             error: error.message
         })
     }
+}
+
+// Get jobs
+async function getClientJobs(clientId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            var jobsData = await model.job.select('client_id', clientId)
+            var jobs = jobsData.rows
+            
+            for (var job of jobs) {
+
+                var clientRow = await model.user.select('id', job.client_id)
+                let client = clientRow.rows[0]
+
+                job.client_fname = client.fname
+                job.client_lname = client.lname
+                job.client_phone = client.phone
+
+                if (job.mechanic_id != null) {
+                    var mechanicRow = await model.user.select('id', job.mechanic_id)
+                    let mechanic = mechanicRow.rows[0]
+                    job.mechanic_fname = mechanic.fname
+                    job.mechanic_lname = mechanic.lname
+                    job.mechanic_phone = mechanic.phone
+                } else {
+                    job.mechanic_fname = null
+                    job.mechanic_lname = null
+                    job.mechanic_phone = null
+                }
+            }
+
+            resolve(jobs)
+            
+        } catch (error) {
+            reject(error)
+        }
+    })
 }
