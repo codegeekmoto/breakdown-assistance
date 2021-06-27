@@ -6,6 +6,14 @@ class Job extends Model {
         super('jobs')
     }
 
+    async jobs(whereCol, whereValue) {
+        const sql =`SELECT * FROM ${this.tableName}
+                    WHERE ${whereCol} = $1
+                        AND status == 'Accepted'`;
+
+        return await this.execute(sql, [whereValue])
+    }
+
     async all(userId) {
         const sql =`SELECT services.id as service_id, 
                             services.name,

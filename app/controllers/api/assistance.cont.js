@@ -160,12 +160,12 @@ exports.refuse = async (req, resp) => {
 
 exports.clientTransaction = async (req, resp) => {
 
-    var { user_id } = req.body
+    var { type, user_id } = req.body
 
     try {
-        var transac = await getClientJobs(user_id)
+        var transac = await getJobs(type, user_id)
         return resp.status(200).send({
-            status: true, 
+            status: true,
             jobs: transac
         });
     } catch (error) {
@@ -178,10 +178,14 @@ exports.clientTransaction = async (req, resp) => {
 }
 
 // Get jobs
-async function getClientJobs(clientId) {
+async function getJobs(type, id) {
     return new Promise(async (resolve, reject) => {
         try {
-            var jobsData = await model.job.select('client_id', clientId)
+
+            var transac = []
+            var hist = []
+
+            var jobsData = await model.job.select(type, id)
             var jobs = jobsData.rows
             
             for (var job of jobs) {
@@ -204,9 +208,18 @@ async function getClientJobs(clientId) {
                     job.mechanic_lname = null
                     job.mechanic_phone = null
                 }
+
+                if (job.status === 'Accepted' || job.status === 'On-Progress') {
+                    transac.push(job)
+                } else if (job.status === 'Completed') {
+                    hist.push(job)
+                }
             }
 
-            resolve(jobs)
+            resolve({
+                transaction: transac,
+                history: hist
+            })
             
         } catch (error) {
             reject(error)
