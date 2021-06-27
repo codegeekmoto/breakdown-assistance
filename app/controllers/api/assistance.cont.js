@@ -177,6 +177,15 @@ exports.clientTransaction = async (req, resp) => {
     }
 }
 
+exports.complete = async (req, resp) => {
+    var { job_id } = req.body
+    var job = await model.job.update('status', 'Completed', 'id', job_id)
+    return resp.status(200).send({
+        status: true,
+        data: job.rows[0]
+    });
+}
+
 // Get jobs
 async function getJobs(type, id) {
     return new Promise(async (resolve, reject) => {
