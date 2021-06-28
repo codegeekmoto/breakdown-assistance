@@ -28,35 +28,42 @@ exports.send = async (token, content) => {
 
 exports.sendTo = async (userId, content) => {
 
-    try {
+    return new Promise( async (resolve, reject) => {
+        try {
 
-        var fcm = await model.fcmToken.select('user_id', userId)
-
-        console.log('fcm', fcm);
-
-        var data = {
-            data: content.data,
-            notification: content.notification,
-            android:{
-                priority:"normal"
-            },
-            apns:{
-                headers:{
-                    "apns-priority":"5"
-                }
-            },
-            webpush: {
-                headers: {
-                    Urgency: "high"
-                }
-            },
-            token: fcm.rows[0].token
-        }
+            var fcm = await model.fcmToken.select('user_id', userId)
     
-        return admin.messaging().send(data)
-    } catch (error) {
-        throw error
-    }
+            console.log('fcm ======>>', fcm.rows);
+    
+            for (var fcm of fcm.rows) {
+                var data = {
+                    data: content.data,
+                    notification: content.notification,
+                    android:{
+                        priority:"normal"
+                    },
+                    apns:{
+                        headers:{
+                            "apns-priority":"5"
+                        }
+                    },
+                    webpush: {
+                        headers: {
+                            Urgency: "high"
+                        }
+                    },
+                    token: fcm.token
+                }
+            
+                await admin.messaging().send(data)
+            }
+
+            resolve()
+    
+        } catch (error) {
+            reject(error)
+        }
+    })
 }
 
 exports.sendMultiple = (tokens, topic) => {
