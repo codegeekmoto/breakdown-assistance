@@ -236,3 +236,12 @@ async function getJobs(type, id) {
         }
     })
 }
+
+exports.getMechanics = async (req, resp) => {
+    var mechanics = await model.user.select('role', 'mechanic')
+
+    return resp.status(200).send({
+        status: true,
+        mechanics: mechanics.rows
+    });
+}
